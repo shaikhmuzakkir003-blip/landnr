@@ -1,0 +1,12 @@
+# build output
+dist/
+
+# deps / caches
+node_modules/
+.npm/
+.cache/
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.log
