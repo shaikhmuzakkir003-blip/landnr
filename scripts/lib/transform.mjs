@@ -288,6 +288,39 @@ const FAILSAFE = `<script>
   window.addEventListener('error', function () {
     setTimeout(function () { if (!html.classList.contains('ln-ready')) html.classList.add('ln-failsafe'); }, 1200);
   });
+
+  /* Anti-trap, independent of every stylesheet and every engine. If a
+     full-screen overlay is still covering the viewport after ~10s, hide it
+     with inline styles and reveal the page. Last line of defence for the
+     cases a class-based failsafe cannot reach: engine.css never arriving,
+     engine.js throwing, or a third-party engine stalling on art that never
+     loads while its overlay sits on top of everything. */
+  var grace = 9;
+  var guard = setInterval(function () {
+    var w = document.querySelector('.transition-w');
+    if (!w || !covers(w)) { clearInterval(guard); return; }
+    if (grace-- > 0) return;
+    clearInterval(guard);
+    w.style.display = 'none';
+    reveal('.page-w');
+    reveal('.main-w');
+  }, 1000);
+
+  function covers(el) {
+    var r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    if (r.width < window.innerWidth - 2 || r.height < window.innerHeight - 2) return false;
+    var s = window.getComputedStyle ? window.getComputedStyle(el) : null;
+    if (!s) return true;
+    return s.display !== 'none' && s.visibility !== 'hidden' && parseFloat(s.opacity || '1') > 0.05;
+  }
+  function reveal(sel) {
+    var el = document.querySelector(sel);
+    if (!el) return;
+    el.style.opacity = '1';
+    el.style.visibility = 'visible';
+    el.style.transform = 'none';
+  }
 }());
 </script>`;
 

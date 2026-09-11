@@ -33,6 +33,7 @@ import { initPreloader } from './preloader.js';
 const VERSION = '1.1.0';
 const startedAt = performance.now();
 const REMOTE_RESCUE_MS = 12000;
+const REMOTE_REVEAL_MS = 16000;
 
 /**
  * Two engines, one page.
@@ -58,27 +59,56 @@ function handOverToRemoteEngine() {
   report.remote = { loaded: true, at: Math.round(performance.now()) };
   note('OFF+BRAND bundle loaded — local engine standing down');
 
-  // the inline failsafe in the HTML only knows ln:ready
-  window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true } }));
+  // Deliberately NOT dispatching ln:ready here. The inline failsafe must stay
+  // armed until something proves the page is actually visible — a bundle can
+  // report "loaded" and then stall forever waiting on its .riv files, and a
+  // disarmed failsafe is exactly how a visitor ends up staring at a bare
+  // lime overlay.
   exposeApi();
   banner();
 
-  const deadline = performance.now() + REMOTE_RESCUE_MS;
+  const started = performance.now();
   const watchdog = setInterval(() => {
-    if (window.lenis || window.landoGL || window.lenisStart) {
+    const waited = performance.now() - started;
+    const alive = Boolean(window.lenis || window.landoGL || window.lenisStart);
+
+    if (!overlayCovering()) {
       clearInterval(watchdog);
-      report.remote.alive = true;
-      note('remote engine confirmed (Lenis / landoGL up)');
+      report.remote.alive = alive;
+      window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true } }));
+      note('remote engine owns the page — failsafe disarmed');
       return;
     }
-    if (performance.now() > deadline) {
+    if (!alive && waited > REMOTE_RESCUE_MS) {
       clearInterval(watchdog);
       note('remote engine loaded but never came up — local engine taking over');
       report.remote.rescued = true;
       docEl.classList.remove('ln-remote');
       boot();
+      return;
+    }
+    if (waited > REMOTE_REVEAL_MS) {
+      // Their engine is alive but the preloader overlay never lifted (its
+      // transition Rive never arrived). Lift it over their engine: they keep
+      // driving scroll and animation, the visitor gets a page.
+      clearInterval(watchdog);
+      report.remote.forcedReveal = true;
+      docEl.classList.add('ln-failsafe');
+      window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true, forced: true } }));
+      note('preloader overlay never lifted — forcing the page visible');
     }
   }, 400);
+}
+
+/** True while `.transition-w` still paints over the whole viewport. */
+function overlayCovering() {
+  const el = doc.querySelector('.transition-w');
+  if (!el) return false;
+  const r = el.getBoundingClientRect();
+  if (!r.width || !r.height) return false;
+  if (r.width < window.innerWidth - 2 || r.height < window.innerHeight - 2) return false;
+  const s = window.getComputedStyle(el);
+  return s.display !== 'none' && s.visibility !== 'hidden' && parseFloat(s.opacity || '1') > 0.05;
 }
 
 function boot() {

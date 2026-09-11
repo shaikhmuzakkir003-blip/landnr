@@ -157,12 +157,19 @@ still refuses, the request simply fails and the fallback below takes over.
 
 | | signal | what happens |
 | --- | --- | --- |
-| **remote** | the bundle's `onload` fired | `html.ln-remote`, `ln-js` removed → our CSS stands down, no module touches the document. A watchdog polls for `window.lenis` / `window.landoGL`; if neither appears within 12 s (their boot waits on every `.riv` before starting Lenis) it re-adds `ln-js` and boots the local engine anyway |
+| **remote** | the bundle's `onload` fired | `html.ln-remote`, `ln-js` removed → our CSS stands down, but the inline failsafe **stays armed** until the watchdog sees the preloader overlay actually leave the viewport. No `window.lenis` / `window.landoGL` within 12 s → the local engine boots. Overlay still covering at 16 s (their engine alive but its transition Rive never arrived) → the page is force-revealed over their engine |
 | **local** | `onerror`, or `LANDNR_ENGINE=local` | `html.ln-js` → the thirteen modules below drive everything |
 
 The bundle is `defer` and the engine is a module, so its load has already
 succeeded or failed by the time we look — the hand-over is synchronous and
 there is no flash of two engines fighting.
+
+Beneath all of that, an inline script in `<head>` — no stylesheet, no module,
+no third party involved — polls once a second: if a full-screen overlay is
+still covering the viewport after ~10 s it hides it with inline styles and
+reveals `.page-w`. A lime screen with nothing on it is the one failure this
+build refuses to ship, including the case where `engine.css` itself never
+arrives and every class-based failsafe is dead on arrival.
 
 Force the local engine with `npm run build -- --local` (or
 `LANDNR_ENGINE=local npm run build`).
@@ -214,8 +221,8 @@ fragments, tree walkers, events, rAF, IntersectionObserver, canvas 2D) plus a
 fake layout pass — block boxes fill their container, inline boxes wrap at the
 viewport, declared flex rows lay their items side by side.
 
-Eight scenarios (desktop, 1920, 1024, tablet, iPhone, touch desktop,
-reduced-motion, remote hand-over) each assert that split text produced
+Nine scenarios (desktop, 1920, 1024, tablet, iPhone, touch desktop,
+reduced-motion, remote hand-over, remote happy-path) each assert that split text produced
 lines/words/chars, reveals reached `done`, every Rive canvas was replaced,
 marquees duplicated, the ambient layer mounted, the preloader armed and
 exited, `html.ln-ready` was set, the nav resolved a theme, the hero intro
@@ -225,9 +232,12 @@ the pin correctly reports itself inactive.
 The `remote` scenario fakes a successful bundle load (`window.__lnRemote`) and
 asserts the opposite: `ln-remote` set, `ln-js` gone, our split-text and
 preloader never ran, all 17 original Rive canvases and 70 `[split-text]`
-elements left untouched, `ln:ready` still fired for the inline failsafe. It
-then advances the clock past the deadline and checks the watchdog rescues the
-page — `ln-js` back, text split by us after all.
+elements left untouched, **and the failsafe still armed** — a loaded bundle
+proves nothing until the page is visible. It then advances the clock past the
+deadlines and checks the watchdog rescues the page: `ln-js` back, text split by
+us, `ln:ready` fired once the rescued preloader enters. `remote-happy` is the
+other branch: Lenis exists and the overlay is gone, so the watchdog disarms
+the failsafe, never rescues, and our engine stays out entirely.
 
 The shim proves the engine runs and mutates the document correctly. It cannot
 prove pixels: it has no stylesheet, so visual verification needs a browser.

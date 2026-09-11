@@ -370,6 +370,10 @@ function createLayout(doc, viewport, state) {
       if (dirty) relayout();
       const r = rects.get(node);
       if (!r) return box(0, 0, 0, 0);
+      // `position: fixed; inset: 0` (the preloader overlay): always viewport-sized
+      if (state.stretched && state.stretched.has(node)) {
+        return box(0, 0, viewport.width, viewport.height);
+      }
       // getBoundingClientRect is viewport-relative: document space minus scroll
       return state.fixed.has(node) ? r : box(r.left, r.top - state.scrollY(), r.width, r.height);
     },
@@ -428,7 +432,8 @@ export function createDOM(html, options = {}) {
   // `position: fixed` elements the published CSS pins (nav, preloader,
   // scroll indicator, GL wash) — they do not move when the page scrolls.
   const fixed = new Set();
-  const state = { scrollY: () => window.scrollY || 0, fixed };
+  const stretched = new Set();
+  const state = { scrollY: () => window.scrollY || 0, fixed, stretched };
   const layout = createLayout(doc, viewport, state);
 
   /* ---------------- node enhancement ---------------- */
@@ -904,6 +909,11 @@ export function createDOM(html, options = {}) {
   for (const selector of options.fixed ?? ['[data-nav-wrap]', '.transition-w', '.scroll-indicator', '.gl-background', '.gl-wrap']) {
     for (const node of selectAll(doc, selector)) fixed.add(node);
   }
+  // `.transition-w` is `position: fixed; inset: 0` in the published stylesheet,
+  // so unlike the other pinned elements it is stretched to the viewport rather
+  // than sized by its content. The watchdog and the inline anti-trap both ask
+  // "is the overlay still covering everything?", which needs this fact.
+  for (const node of selectAll(doc, '.transition-w')) stretched.add(node);
   for (const selector of options.hidden ?? ['[data-nav-m]']) {
     for (const node of selectAll(doc, selector)) node.style.display = 'none';
   }

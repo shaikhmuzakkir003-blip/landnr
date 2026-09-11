@@ -27,9 +27,10 @@ const SCENARIOS = {
   reduced: { width: 1440, height: 900, reducedMotion: true },
 };
 
-const SCENARIO_OPTIONS = { remote: { width: 1440, height: 900 } };
+const SCENARIO_OPTIONS = { remote: { width: 1440, height: 900 }, 'remote-happy': { width: 1440, height: 900 } };
 const options = SCENARIOS[scenario] || SCENARIO_OPTIONS[scenario] || SCENARIOS.desktop;
-const remoteMode = scenario === 'remote';
+const remoteMode = scenario === 'remote' || scenario === 'remote-happy';
+const happy = scenario === 'remote-happy';
 const problems = [];
 
 const check = (label, actual, test) => {
@@ -57,6 +58,13 @@ let remoteReady = 0;
 if (remoteMode) {
   window.__lnRemote = { loaded: 1 };
   window.addEventListener('ln:ready', () => { remoteReady += 1; });
+  if (happy) {
+    // simulate the bundle actually coming up: Lenis exists and its page
+    // transition has consumed the overlay
+    window.lenis = { scroll: () => {} };
+    const w = window.document.querySelector('.transition-w');
+    if (w && w.parentNode) w.parentNode.removeChild(w);
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -85,20 +93,41 @@ if (remoteMode) {
   check('remote: our preloader did not run', report.counts.preloaderDone ?? 0, 0);
   check('remote: original rive canvases intact', dom.count('canvas[data-rive-object]'), (n) => n > 10);
   check('remote: original split-text markup intact', dom.count('[split-text]'), (n) => n > 60);
-  check('remote: ln:ready fired for the inline failsafe', remoteReady, 1);
+  if (happy) {
+    await new Promise((r) => setTimeout(r, 600)); // one real-time watchdog tick
+    check('remote-happy: watchdog confirmed the page visible', remoteReady, 1);
+    check('remote-happy: remote engine alive', report.remote.alive, true);
+    check('remote-happy: failsafe not applied', root.classList.contains('ln-failsafe'), false);
+  } else {
+    check('remote: failsafe stays armed until the page proves visible', remoteReady, 0);
+  }
   check('remote: api exposed', typeof window.landnr.report, 'object');
 
-  // their bundle loaded but Lenis never came up → the watchdog must rescue.
-  // The shim drives performance.now() from frames() but its setInterval is the
-  // real one, so the clock is advanced first and then the timer is given real
-  // time to tick.
-  dom.frames(900, 20); // ~18s of clock, past the 12s deadline
+  // Advance the clock past both deadlines (12s rescue, 16s forced reveal).
+  // The shim drives performance.now() from frames() but setInterval is the
+  // real timer, so the watchdog then gets real time to tick.
+  dom.frames(900, 20); // ~18s of clock
   await new Promise((r) => setTimeout(r, 500));
   dom.frames(12);
   dom.intersect();
-  check('remote: watchdog took over', report.remote.rescued, true);
-  check('remote: ln-js restored after rescue', dom.document.documentElement.classList.contains('ln-js'), true);
-  check('remote: local engine then split the text', dom.count('.line'), (n) => n > 30);
+
+  if (happy) {
+    check('remote-happy: no rescue — their engine keeps the page', report.remote.rescued, undefined);
+    check('remote-happy: no forced reveal needed', report.remote.forcedReveal, undefined);
+    check('remote-happy: local engine stayed out', report.counts.splitText ?? 0, 0);
+    check('remote-happy: ln-js still removed', dom.document.documentElement.classList.contains('ln-js'), false);
+  } else {
+    check('remote: watchdog took over', report.remote.rescued, true);
+    check('remote: ln-js restored after rescue', dom.document.documentElement.classList.contains('ln-js'), true);
+    check('remote: local engine then split the text', dom.count('.line'), (n) => n > 30);
+    // the rescued preloader enters on real-time timers — HARD_ENTER_MS (8s)
+    // worst case, plus the 720ms exit before onEnter fires ln:ready
+    await new Promise((r) => setTimeout(r, 9200));
+    dom.frames(60, 16);
+    dom.intersect();
+    dom.frames(30, 16);
+    check('remote: ln:ready fired after the rescue', remoteReady >= 1, true);
+  }
 
   console.log(`\nsmoke · remote hand-over + watchdog rescue in ${Date.now() - startedAt}ms`);
   console.log(`   clock at rescue        ${Math.round(window.performance.now())}ms`);
