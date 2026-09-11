@@ -11,7 +11,7 @@ import { dirname, resolve } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SMOKE = resolve(HERE, 'smoke.mjs');
-const scenarios = ['desktop', 'wide', 'narrow', 'tablet', 'mobile', 'touch', 'reduced'];
+const scenarios = ['desktop', 'wide', 'narrow', 'tablet', 'mobile', 'touch', 'reduced', 'remote'];
 
 let failed = 0;
 const summary = [];

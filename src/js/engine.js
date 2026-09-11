@@ -30,12 +30,59 @@ import { initSections, playHero, streamConfig } from './sections.js';
 import { initSmoothScroll, disable as disableSmoothScroll, scrollTo } from './smooth-scroll.js';
 import { initPreloader } from './preloader.js';
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const startedAt = performance.now();
+const REMOTE_RESCUE_MS = 12000;
 
-boot();
+/**
+ * Two engines, one page.
+ *
+ * The homepage ships the real OFF+BRAND bundle (restored from the HTML comment
+ * it was parked in, on the one host that does not reject foreign referrers).
+ * It is a `defer` script and this is a module, so by the time we run, its
+ * load has already succeeded or failed and left a marker on `window`.
+ *
+ *   · it loaded  → stand down: the genuine engine drives the real Rive helmet,
+ *                  signature, circuits, arrows and page transition. Our CSS
+ *                  switches itself off with the `ln-js` class, and a watchdog
+ *                  takes over if the bundle loaded but never came up (its boot
+ *                  awaits every `.riv` file before it starts Lenis).
+ *   · it failed  → boot the local engine, which is a complete replacement.
+ */
+if (window.__lnRemote?.loaded) handOverToRemoteEngine();
+else boot();
+
+function handOverToRemoteEngine() {
+  docEl.classList.remove('ln-js');
+  docEl.classList.add('ln-remote');
+  report.remote = { loaded: true, at: Math.round(performance.now()) };
+  note('OFF+BRAND bundle loaded — local engine standing down');
+
+  // the inline failsafe in the HTML only knows ln:ready
+  window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true } }));
+  exposeApi();
+  banner();
+
+  const deadline = performance.now() + REMOTE_RESCUE_MS;
+  const watchdog = setInterval(() => {
+    if (window.lenis || window.landoGL || window.lenisStart) {
+      clearInterval(watchdog);
+      report.remote.alive = true;
+      note('remote engine confirmed (Lenis / landoGL up)');
+      return;
+    }
+    if (performance.now() > deadline) {
+      clearInterval(watchdog);
+      note('remote engine loaded but never came up — local engine taking over');
+      report.remote.rescued = true;
+      docEl.classList.remove('ln-remote');
+      boot();
+    }
+  }, 400);
+}
 
 function boot() {
+  docEl.classList.add('ln-js');
   detectBrowser();
 
   safe('rive-fallbacks', () => initRiveFallbacks(doc));
@@ -116,7 +163,9 @@ function banner() {
     'background:#13251c;color:#d2ff00;font:400 1em/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;padding:.4em .6em',
   );
   console.log(
-    `%c homepage markup, type and colour from the published capture · engine ${VERSION} · window.landnr for the API`,
+    `%c homepage markup, type and colour from the published capture · engine ${VERSION}`
+    + `${docEl.classList.contains('ln-remote') ? ' (standing by behind OFF+BRAND)' : ' (driving)'}`
+    + ' · window.landnr for the API',
     subtle,
   );
 }

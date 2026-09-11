@@ -33,6 +33,7 @@ import {
   getAttr,
   hasAttr,
   hasClass,
+  insertAfter,
   isElement,
   outerHTML,
   parse,
@@ -46,16 +47,36 @@ import {
 
 export const SITE_ORIGIN = 'https://landonorris.com';
 
-/** Scripts that must not survive the build. */
+/**
+ * Scripts that never survive the build: tracking, consent, a dev machine's
+ * bundler, and the two bundles on `lando.itsoffbrand.io` — that host answers
+ * "Access denied - Invalid referrer" to any origin that is not
+ * landonorris.com, so from a local build they can only ever be a 403.
+ */
 const BLOCKED_SRC = [
   '/avljl2rk9q5p',                        // Google tag first-party proxy
-  'itsoffbrand.io',                       // OFF+BRAND engine (referrer-blocked)
+  'lando.itsoffbrand.io',                 // referrer-locked engine host
   'klaviyo.com',                          // email capture
   'iubenda.com',                          // consent banner
-  'd3e54v103j8qbb.cloudfront.net',        // jQuery (no interactions need it)
-  '/js/lando-offbrand.',                  // Webflow runtime (page has 0 data-w-id)
   'localhost:6645',                       // a dev machine's bundler
 ];
+
+/**
+ * The original engine and the three scripts it needs. `assets.itsoffbrand.io`
+ * has no referrer check, so a browser *can* run the real OFF+BRAND bundle —
+ * which means the real Rive art (helmet, signature, circuits, arrows) and the
+ * real page transition. They stay in the page unless the build is asked for a
+ * purely local engine (LANDNR_ENGINE=local), and src/js/engine.js stands down
+ * when it sees them come up.
+ */
+export const REMOTE_ENGINE_SRC = [
+  'assets.itsoffbrand.io',                // OFF+BRAND engine + transitions
+  'd3e54v103j8qbb.cloudfront.net',        // jQuery (the Webflow runtime needs it)
+  '/js/lando-offbrand.',                  // Webflow runtime (engine calls window.Webflow)
+];
+
+/** The bundle whose load decides remote-vs-local at runtime. */
+export const REMOTE_ENGINE_BUNDLE = 'lando-by-OFF+BRAND.js';
 
 /** Inline scripts that must not survive the build. */
 const BLOCKED_INLINE = [
@@ -143,7 +164,53 @@ export const SUB_PAGES = [
  * Cleaning
  * ------------------------------------------------------------------ */
 
-export function cleanDocument(root, report = {}) {
+/**
+ * The capture has the engine commented out.
+ *
+ * Whoever saved the page left a ladder of alternative builds inside HTML
+ * comments. The one the live site actually runs is
+ * `lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js` — and
+ * that host answers "Access denied - Invalid referrer" to any origin that is
+ * not landonorris.com, so from a local build it can only ever be a 403.
+ *
+ * Two of the commented-out builds sit on `assets.itsoffbrand.io`, which has no
+ * referrer lock: the full OFF+BRAND app bundle (Lenis, GSAP, the Rive loader
+ * and the `allriveloaded` handshake) and the Rive page-transition script.
+ * Restoring those two gives the browser the genuine engine — real Rive helmet,
+ * signature, circuits, button arrows and transition — and `src/js/engine.js`
+ * stands down when it sees them come up. `referrerpolicy="no-referrer"` plus a
+ * document-level referrer meta give the requests (and the `.riv` files the
+ * bundle fetches itself) the best chance of being accepted.
+ */
+function restoreRemoteEngine(root, report) {
+  for (const comment of findAll(root, (n) => n.type === 'comment')) {
+    const match = /<script[^>]*\bsrc="([^"]*lando-by-OFF\+BRAND\.js)"/.exec(comment.value || '');
+    if (!match) continue;
+    insertAfter(root, comment, fragment(
+      `<script defer referrerpolicy="no-referrer" src="${match[1]}"`
+      + ` onload="window.__lnRemote={loaded:1}" onerror="window.__lnRemote={failed:1}"></script>`,
+    ));
+    removeNode(root, comment);
+    report.remoteEngine = match[1];
+    break;
+  }
+
+  for (const div of findAll(root, (n) => isElement(n, 'div') && hasClass(n, 'js__embed'))) {
+    const comment = (div.children || []).find((c) => c.type === 'comment'
+      && (c.value || '').includes('transitions-rive-isolate.js'));
+    if (!comment) continue;
+    const match = /<script[^>]*\bsrc="([^"]*transitions-rive-isolate\.js)"/.exec(comment.value);
+    if (!match) continue;
+    insertAfter(root, div, fragment(
+      `<script referrerpolicy="no-referrer" src="${match[1]}"></script>`,
+    ));
+    removeNode(root, div);
+    report.remoteTransitions = match[1];
+    break;
+  }
+}
+
+export function cleanDocument(root, report = {}, { remoteEngine = true } = {}) {
   const bump = (key, by = 1) => { report[key] = (report[key] || 0) + by; };
 
   // Scripts -------------------------------------------------------------
@@ -151,12 +218,16 @@ export function cleanDocument(root, report = {}) {
     const src = getAttr(script, 'src') || '';
     const body = script.children.filter((c) => c.type === 'rawtext').map((c) => c.value).join('');
     const blocked = BLOCKED_SRC.some((needle) => src.includes(needle))
-      || BLOCKED_INLINE.some((needle) => body.includes(needle));
+      || BLOCKED_INLINE.some((needle) => body.includes(needle))
+      || (!remoteEngine && REMOTE_ENGINE_SRC.some((needle) => src.includes(needle)));
     if (blocked) {
       removeNode(root, script);
       bump('scriptsRemoved');
+      continue;
     }
   }
+
+  if (remoteEngine) restoreRemoteEngine(root, report);
 
   // Comments ------------------------------------------------------------
   for (const comment of findAll(root, (n) => n.type === 'comment')) {
@@ -222,10 +293,16 @@ const FAILSAFE = `<script>
 
 const ENGINE_TAG = `<script type="module" src="/assets/js/engine.js"></script>`;
 
-export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buildStamp } = {}) {
+export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buildStamp, remoteEngine = true } = {}) {
   const head = find(root, (n) => isElement(n, 'head'));
   const body = find(root, (n) => isElement(n, 'body'));
   if (!head || !body) throw new Error('document is missing <head>/<body>');
+
+  // The OFF+BRAND hosts reject foreign referrers; sending none is the only
+  // lever a browser gives us, and it applies to the .riv fetches too.
+  if (remoteEngine) {
+    append(head, fragment('<meta name="referrer" content="no-referrer">'));
+  }
 
   append(head, fragment(
     `<link rel="stylesheet" href="${stylesheet}">`
@@ -242,9 +319,10 @@ export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buil
  * ------------------------------------------------------------------ */
 
 export function buildHome(sourceHtml, opts = {}) {
+  const remoteEngine = opts.remoteEngine !== false;
   const { root, repairs } = parse(sourceHtml);
   const report = { repairs: summarizeRepairs(repairs) };
-  cleanDocument(root, report);
+  cleanDocument(root, report, { remoteEngine });
   injectAssets(root, opts);
   return { root, html: serialize(root), report };
 }
@@ -305,6 +383,14 @@ function composeSubPage(root, def) {
   // No preloader / no hero-only chrome on sub-pages ---------------------
   for (const node of findAll(root, (n) => isElement(n, 'div')
     && (hasClass(n, 'transition-w') || hasClass(n, 'mob-landscape-block') || hasClass(n, 'scroll-indicator')))) {
+    removeNode(root, node);
+  }
+
+  // Sub-pages always run the local engine: they have no `.transition-w` for
+  // the OFF+BRAND transition to drive and no Rive art of their own, so the
+  // remote bundle would only add a dependency and a chance of a dead page.
+  for (const node of findAll(root, (n) => isElement(n, 'script')
+    && REMOTE_ENGINE_SRC.some((needle) => (getAttr(n, 'src') || '').includes(needle)))) {
     removeNode(root, node);
   }
 

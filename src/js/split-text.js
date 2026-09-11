@@ -31,6 +31,14 @@ export function initSplitText(root = document) {
   for (const el of targets) {
     if (registry.has(el)) continue;
     if (el.closest('[display-none], .display-none')) continue; // hidden by design, never revealed
+    // Another engine (the restored OFF+BRAND bundle) may have split this
+    // already. Adopt its result instead of nesting a second split inside it.
+    if (el.querySelector('.line')) {
+      registry.set(el, { el, modes: parseModes(el.getAttribute('split-text')), original: el.innerHTML,
+        state: 'idle', atoms: [], groups: null, lines: el.querySelectorAll('.line').length, adopted: true });
+      count('splitTextAdopted');
+      continue;
+    }
 
     const modes = parseModes(el.getAttribute('split-text'));
     const record = {

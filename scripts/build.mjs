@@ -47,7 +47,12 @@ async function main() {
 
   /* 1 — homepage ------------------------------------------------------ */
   const stamp = `built ${new Date().toISOString()} · landnr · homepage capture: Last Published Tue Aug 11 2026`;
-  const home = buildHome(sourceHtml, { buildStamp: stamp });
+  // The homepage keeps the real OFF+BRAND engine (assets.itsoffbrand.io has no
+  // referrer lock), and src/js/engine.js falls back to the local engine if that
+  // bundle does not come up. LANDNR_ENGINE=local / --local builds local-only.
+  const remoteEngine = process.env.LANDNR_ENGINE !== 'local' && !args.includes('--local');
+  const home = buildHome(sourceHtml, { buildStamp: stamp, remoteEngine });
+  log('  engine   ', remoteEngine ? 'OFF+BRAND bundle + local fallback' : 'local only');
   log('  repairs  ', JSON.stringify(home.report.repairs));
   log('  removed  ', `${home.report.scriptsRemoved || 0} scripts, ${home.report.commentsRemoved || 0} comments, ${home.report.embedsRemoved || 0} empty embeds`);
 
@@ -58,7 +63,7 @@ async function main() {
   const assets = await collectAssets(join(SRC, 'css'), join(SRC, 'js'));
 
   /* 4 — checks -------------------------------------------------------- */
-  const problems = runChecks({ home, subs, assets });
+  const problems = runChecks({ home, subs, assets, remoteEngine });
 
   /* 5 — write --------------------------------------------------------- */
   const files = [
@@ -145,15 +150,18 @@ async function walk(dir) {
  * Sanity checks that keep the build honest. Each one looks at the *generated*
  * document, not the source, so a regression in the transform shows up here.
  */
-function runChecks({ home, subs, assets }) {
+function runChecks({ home, subs, assets, remoteEngine = true }) {
   const problems = [];
   const { root } = parse(home.html);
 
   // a) no blocked third parties survived
   for (const script of findAll(root, (n) => isElement(n, 'script'))) {
     const src = getAttr(script, 'src') || '';
-    if (/itsoffbrand|klaviyo|iubenda|googletagmanager|d3e54v103j8qbb|localhost:/.test(src)) {
+    if (/klaviyo|iubenda|googletagmanager|localhost:|lando\.itsoffbrand\.io/.test(src)) {
       problems.push(`blocked script still present: ${src}`);
+    }
+    if (!remoteEngine && /assets\.itsoffbrand\.io|d3e54v103j8qbb|\/js\/lando-offbrand\./.test(src)) {
+      problems.push(`remote engine present in a local-only build: ${src}`);
     }
     const body = script.children.filter((c) => c.type === 'rawtext').map((c) => c.value).join('');
     if (/gtag\(|google_tags_first_party/.test(body)) problems.push('analytics inline script still present');
@@ -165,6 +173,20 @@ function runChecks({ home, subs, assets }) {
   if (!links.some((h) => h.endsWith('/assets/css/engine.css'))) problems.push('engine.css is not linked');
   const scripts = findAll(root, (n) => isElement(n, 'script')).map((n) => getAttr(n, 'src') || '');
   if (!scripts.some((s) => s.endsWith('/assets/js/engine.js'))) problems.push('engine.js is not referenced');
+  if (remoteEngine) {
+    const bundle = findAll(root, (n) => isElement(n, 'script')
+      && (getAttr(n, 'src') || '').includes('lando-by-OFF+BRAND.js'));
+    if (!bundle.length) problems.push('remote engine bundle is missing from the homepage');
+    else if (!getAttr(bundle[0], 'onload')) problems.push('remote engine bundle has no load marker');
+    if (!scripts.some((s) => s.includes('transitions-rive-isolate'))) problems.push('transition Rive script is missing');
+    if (!scripts.some((s) => s.includes('d3e54v103j8qbb'))) problems.push('jQuery is missing (the Webflow runtime needs it)');
+    if (!scripts.some((s) => s.includes('/js/lando-offbrand.'))) problems.push('Webflow runtime is missing');
+  }
+  for (const { def, html } of subs) {
+    if (/itsoffbrand|d3e54v103j8qbb|\/js\/lando-offbrand\./.test(html)) {
+      problems.push(`${def.slug}: sub-page should not carry the remote engine`);
+    }
+  }
 
   // c) every local asset reference exists in the build
   const assetPaths = new Set(assets.map((a) => `/assets/${a.rel}`));

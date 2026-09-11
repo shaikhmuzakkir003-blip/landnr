@@ -27,8 +27,16 @@ const SCENARIOS = {
   reduced: { width: 1440, height: 900, reducedMotion: true },
 };
 
-const options = SCENARIOS[scenario] || SCENARIOS.desktop;
+const SCENARIO_OPTIONS = { remote: { width: 1440, height: 900 } };
+const options = SCENARIOS[scenario] || SCENARIO_OPTIONS[scenario] || SCENARIOS.desktop;
+const remoteMode = scenario === 'remote';
 const problems = [];
+
+const check = (label, actual, test) => {
+  const ok = typeof test === 'function' ? test(actual) : actual === test;
+  if (!ok) problems.push(`${label}: got ${JSON.stringify(actual)}`);
+  return ok;
+};
 const logs = { error: [], warn: [], info: [] };
 
 for (const level of ['error', 'warn', 'info']) {
@@ -43,6 +51,14 @@ const html = await readFile(resolve(ROOT, 'dist/index.html'), 'utf8');
 const dom = createDOM(html, options);
 const { window } = dom;
 
+// In the browser the restored OFF+BRAND bundle is a defer script, so it has
+// already reported success or failure by the time the engine module runs.
+let remoteReady = 0;
+if (remoteMode) {
+  window.__lnRemote = { loaded: 1 };
+  window.addEventListener('ln:ready', () => { remoteReady += 1; });
+}
+
 /* ------------------------------------------------------------------ *
  * boot
  * ------------------------------------------------------------------ */
@@ -55,6 +71,49 @@ dom.frames(5);
 
 const report = window.landnr?.report;
 if (!report) problems.push('window.landnr was never exposed — engine.js did not finish booting');
+
+/* ------------------------------------------------------------------ *
+ * remote hand-over: the genuine OFF+BRAND bundle loaded, so ours must
+ * stand down — and take over again if that bundle never comes up
+ * ------------------------------------------------------------------ */
+
+if (remoteMode) {
+  const root = dom.document.documentElement;
+  check('remote: ln-remote set', root.classList.contains('ln-remote'), true);
+  check('remote: ln-js removed, our CSS stands down', root.classList.contains('ln-js'), false);
+  check('remote: our split-text did not run', report.counts.splitText ?? 0, 0);
+  check('remote: our preloader did not run', report.counts.preloaderDone ?? 0, 0);
+  check('remote: original rive canvases intact', dom.count('canvas[data-rive-object]'), (n) => n > 10);
+  check('remote: original split-text markup intact', dom.count('[split-text]'), (n) => n > 60);
+  check('remote: ln:ready fired for the inline failsafe', remoteReady, 1);
+  check('remote: api exposed', typeof window.landnr.report, 'object');
+
+  // their bundle loaded but Lenis never came up → the watchdog must rescue.
+  // The shim drives performance.now() from frames() but its setInterval is the
+  // real one, so the clock is advanced first and then the timer is given real
+  // time to tick.
+  dom.frames(900, 20); // ~18s of clock, past the 12s deadline
+  await new Promise((r) => setTimeout(r, 500));
+  dom.frames(12);
+  dom.intersect();
+  check('remote: watchdog took over', report.remote.rescued, true);
+  check('remote: ln-js restored after rescue', dom.document.documentElement.classList.contains('ln-js'), true);
+  check('remote: local engine then split the text', dom.count('.line'), (n) => n > 30);
+
+  console.log(`\nsmoke · remote hand-over + watchdog rescue in ${Date.now() - startedAt}ms`);
+  console.log(`   clock at rescue        ${Math.round(window.performance.now())}ms`);
+  console.log(`   split .line            ${dom.count('.line')}   (after the rescue)`);
+  console.log(`   split .char            ${dom.count('.char')}`);
+  console.log(`   [split-text]           ${dom.count('[split-text]')}`);
+  console.log(`   rive canvases          ${dom.count('canvas[data-rive-object]')}`);
+  if (problems.length) {
+    console.log(`\n   ✗ ${problems.length} problem(s):`);
+    for (const problem of problems) console.log(`     - ${problem}`);
+    process.exitCode = 1;
+  } else console.log('\n   ✓ no problems');
+  dom.restore();
+  process.exit(process.exitCode || 0);
+}
 
 /* ------------------------------------------------------------------ *
  * scroll through the whole page, letting observers fire
@@ -118,11 +177,6 @@ dom.frames(6);
  * assertions
  * ------------------------------------------------------------------ */
 
-const check = (label, actual, test) => {
-  const ok = typeof test === 'function' ? test(actual) : actual === test;
-  if (!ok) problems.push(`${label}: got ${JSON.stringify(actual)}`);
-  return ok;
-};
 
 const counts = {
   'split .line': dom.count('.line'),
