@@ -1,5 +1,6 @@
 # build output
 dist/
+landnr-netlify.zip
 
 # deps / caches
 node_modules/

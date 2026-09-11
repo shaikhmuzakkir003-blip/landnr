@@ -15,7 +15,7 @@ the Rive art and the WebGL wash.
 ```bash
 npm run dev        # build + serve with watch  →  http://localhost:4173
 npm run build      # source/ + src/  →  dist/
-npm run smoke      # boot the real engine against the real build, 7 viewports
+npm run smoke      # boot the real engine against the real build, 8 scenarios
 ```
 
 No `npm install` is needed — there are no dependencies. Node ≥ 20.11.
@@ -35,6 +35,46 @@ Only the homepage existed in the capture. Every link in the nav, footer and
 menu resolves: internal routes go to a stand-in, external ones
 (`store.landonorris.com`, Instagram, YouTube, Twitch, TikTok) open the real
 destination in a new tab.
+
+---
+
+## Deploying to Netlify
+
+`dist/` is the whole site — static HTML, CSS and ES modules, no server, no
+dependencies, nothing to install. Two ways to ship it:
+
+**1. From this repository** (recommended — `netlify.toml` already says
+everything): Netlify → *Add new site* → *Import an existing project* → pick
+this repo and the branch you want. Build command `npm run build`, publish
+directory `dist`. Netlify's post-processing is switched off in
+`netlify.toml`, so nothing rewrites the capture's markup or the engine tags.
+
+**2. Drag and drop**: run `npm run build`, then drag the `dist/` **folder**
+(not a parent directory) onto <https://app.netlify.com/drop>. Netlify accepts
+folders directly; a zip of the folder's *contents* works too.
+
+Either way the deploy carries:
+
+| File | Why |
+| --- | --- |
+| `netlify.toml` | build command, publish dir, Node 22, `skip_processing` |
+| `dist/_headers` | `Referrer-Policy: no-referrer` (the OFF+BRAND hosts reject foreign referrers — this is what lets the real engine and its `.riv` files through), `X-Content-Type-Options: nosniff`, `Cache-Control: no-cache` (nothing in `dist/` is content-hashed, so a stale asset would mean a stale engine) |
+| `dist/404.html` | Netlify's automatic custom 404 |
+
+No `_redirects` are needed: routes are directories with an `index.html`, which
+Netlify's pretty URLs serve at `/on-track`.
+
+Two things to know before you deploy:
+
+* **Absolute paths.** Assets are referenced as `/assets/…`, so the site must
+  sit at a domain root — which is what Netlify gives you. Deploying into a
+  subdirectory of some other host would need those rewritten.
+* **The real engine depends on a third-party host.** `assets.itsoffbrand.io`
+  has no referrer lock today, so the genuine OFF+BRAND bundle and its Rive art
+  load on your Netlify domain. If that host ever changes its mind, the request
+  fails, `src/js/engine.js` boots the local engine instead, and the page still
+  works — you lose the Rive art, not the site. `npm run build -- --local`
+  ships the local engine only, with no third-party script at all.
 
 ## How the build works
 

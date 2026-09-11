@@ -73,6 +73,7 @@ async function main() {
       body: html,
     })),
     ...assets.map((a) => ({ path: join('assets', a.rel), body: a.body, binary: a.binary })),
+    ...deployConfig(),
   ];
 
   const report = {
@@ -119,6 +120,34 @@ async function main() {
 /* ------------------------------------------------------------------ *
  * helpers
  * ------------------------------------------------------------------ */
+
+/**
+ * Netlify response headers, written into the publish directory.
+ *
+ * `Referrer-Policy: no-referrer` is not cosmetic: the restored OFF+BRAND
+ * bundle and every `.riv` file it fetches are served from hosts that reject
+ * foreign referrers, and sending none is the only lever a browser offers.
+ * `no-cache` everywhere because nothing in dist/ is content-hashed — a stale
+ * asset here would mean a stale engine.
+ *
+ * Routes need no redirects: they are directories with an index.html, which
+ * Netlify's pretty URLs serve at /on-track, and dist/404.html is picked up
+ * automatically as the custom 404.
+ */
+function deployConfig() {
+  return [
+    {
+      path: '_headers',
+      body: [
+        '/*',
+        '  Referrer-Policy: no-referrer',
+        '  X-Content-Type-Options: nosniff',
+        '  Cache-Control: no-cache',
+        '',
+      ].join('\n'),
+    },
+  ];
+}
 
 function kb(n) { return `${(n / 1024).toFixed(1)} kB`; }
 
