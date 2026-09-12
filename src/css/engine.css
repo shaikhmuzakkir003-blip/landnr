@@ -1,0 +1,498 @@
+/* =====================================================================
+   engine.css — the styling half of the local engine.
+
+   Rules of engagement:
+   · The published Webflow stylesheet (lando-offbrand.shared.*.css) owns the
+     design. Nothing here restyles an existing component's box model.
+   · Everything that depends on JavaScript is gated behind `html.ln-js`, so a
+     visitor with JS disabled sees the finished page, not a hidden one.
+   · Anything this build adds uses an `ln-` prefix or a `[data-ln-*]` hook.
+   · Colours always resolve through the site's own custom properties first
+     (--color--*) and fall back to the brand hex values second.
+   ===================================================================== */
+
+:root  {
+  /* brand tokens (site values win when the Webflow sheet defines them) */
+  --ln-lime: var(--color--lime, #d2ff00);
+  --ln-lime-off: var(--color--lime-off, #e9ffc2);
+  --ln-dark-green: var(--color--dark-green, #13251c);
+  --ln-tint-1: var(--color--dark-green-tint-1, #2f4c3c);
+  --ln-tint-2: var(--color--dark-green-tint-2, #47695a);
+  --ln-black: var(--color--black, #101400);
+  --ln-white: var(--color--white, #fdfdf5);
+  --ln-grey-1: var(--color--grey-1, #b9bdb0);
+  --ln-grey-2: var(--color--grey-2, #7e8377);
+
+  /* motion */
+  --ln-ease: cubic-bezier(0.65, 0.05, 0, 1);
+  --ln-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ln-dur: 0.75s;
+  --ln-dur-slow: 1.1s;
+}
+
+/* ---------------------------------------------------------------------
+   0 · safety net — the page is never allowed to stay invisible
+   --------------------------------------------------------------------- */
+
+html.ln-failsafe .transition-w { display: none !important; }
+
+html.ln-failsafe .page-w,
+html.ln-failsafe .main-w,
+html.ln-failsafe .taxi-w,
+html.ln-failsafe .nav  {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  clip-path: none !important;
+  filter: none !important;
+}
+
+html.ln-failsafe [data-anim-high] .line > .ln-line-in,
+html.ln-failsafe .ln-chars .char  {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ---------------------------------------------------------------------
+   1 · preloader (the capture's .transition-w overlay + "Load Norris" CTA)
+   --------------------------------------------------------------------- */
+
+html.ln-js .transition-w {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9000;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background-color: var(--ln-dark-green);
+  background-image: radial-gradient(120% 80% at 50% 0%, rgba(210, 255, 0, 0.09), transparent 60%);
+  transition: opacity 0.7s var(--ln-ease), visibility 0.7s var(--ln-ease);
+}
+
+html.ln-js .transition-w .transition-rive{ position: absolute; inset: 0; pointer-events: none; }
+
+/* the Rive canvases cannot be filled (see README) — they are hidden and
+   replaced by the fallback art injected from src/js/icons.js */
+html.ln-js .transition-w canvas{ display: none; }
+
+.ln-preloader-art  {
+  position: relative;
+  width: min(38vw, 15rem);
+  color: var(--ln-lime);
+  opacity: 0;
+  transform: translateY(0.75rem) scale(0.96);
+  transition: opacity 0.8s var(--ln-ease-out), transform 0.8s var(--ln-ease-out);
+}
+
+.ln-preloader-art svg { width: 100%; height: auto; display: block; }
+
+html.ln-js .transition-w.is-armed .ln-preloader-art{ opacity: 1; transform: none; }
+
+.ln-preloader-meter  {
+  position: relative;
+  width: min(52vw, 18rem);
+  height: 2px;
+  background-color: rgba(253, 253, 245, 0.16);
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.ln-preloader-meter span  {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background-color: var(--ln-lime);
+  transition: width 0.35s linear;
+}
+
+.ln-preloader-count  {
+  font-family: 'Mona Sans', var(--ln-mono, ui-monospace), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(253, 253, 245, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+html.ln-js .transition-w .transition-btn{ position: relative; z-index: 2; }
+
+html.ln-js .transition-w.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------
+   2 · navigation + full-screen menu
+   --------------------------------------------------------------------- */
+
+html.ln-js .nav-menu-w  {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s var(--ln-ease), visibility 0.55s var(--ln-ease);
+}
+
+html.ln-js .nav-menu-w.is-open  {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html.ln-js .nav-menu-bg{ will-change: transform; }
+
+html.ln-js .nav-menu-w .nav-menu-link-w,
+html.ln-js .nav-menu-w .nav-menu-img-w,
+html.ln-js .nav-menu-w .nav-menu-social-w,
+html.ln-js .nav-menu-w .nav-helmet-rive-w  {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.6s var(--ln-ease-out), transform 0.7s var(--ln-ease-out);
+  transition-delay: calc(var(--ln-i, 0) * 55ms + 90ms);
+}
+
+html.ln-js .nav-menu-w.is-open .nav-menu-link-w,
+html.ln-js .nav-menu-w.is-open .nav-menu-img-w,
+html.ln-js .nav-menu-w.is-open .nav-menu-social-w,
+html.ln-js .nav-menu-w.is-open .nav-helmet-rive-w  {
+  opacity: 1;
+  transform: none;
+}
+
+/* hamburger → cross (the Rive artboard is unavailable) */
+html.ln-js .nav-ham{ position: relative; }
+
+.ln-burger { width: 100%; height: 100%; display: block; }
+
+.ln-burger rect  {
+  transition: transform 0.45s var(--ln-ease), opacity 0.3s linear;
+  transform-origin: 50% 50%;
+}
+
+html.ln-js .nav.is-menu-open .ln-burger .ln-b1{ transform: translateY(5px) rotate(45deg); }
+html.ln-js .nav.is-menu-open .ln-burger .ln-b2{ opacity: 0; transform: scaleX(0.2); }
+html.ln-js .nav.is-menu-open .ln-burger .ln-b3{ transform: translateY(-5px) rotate(-45deg); }
+
+/* the LN wordmark that replaces canvas[data-rive-ln4] */
+.ln-nav-wordmark { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+body.ln-menu-open { overflow: hidden; }
+
+/* ---------------------------------------------------------------------
+   3 · split text
+   --------------------------------------------------------------------- */
+
+html.ln-js [split-text] .line{ position: relative; display: block; }
+
+html.ln-js [split-text] .line > .ln-line-in{ display: block; }
+
+html.ln-js [split-text] .word{ display: inline-block; }
+
+html.ln-js [split-text] .char{ display: inline-block; will-change: transform; }
+
+/* The capture's own embed asks for `[data-anim-high] .line { display:
+   inline-block !important; width: auto !important }`. That lives in a <style>
+   block in the body, so it beats an equal-specificity rule from this
+   stylesheet — and adjacent inline-block lines with no whitespace between
+   them never wrap, which would push a highlighted paragraph off-screen.
+   This engine rebuilds the line boxes itself, so it keeps them block-level;
+   the html.ln-js prefix is what wins the cascade. */
+html.ln-js [data-anim-high] .line { display: block !important; width: 100% !important; }
+
+/* keep the eyebrow variant that the site itself asks for */
+html.ln-js .text-eyebrow.flex .line{ display: flex !important; }
+
+html.ln-js [data-anim-high].ln-hidden .line { clip-path: inset(-35% -8% 0% -8%); }
+
+html.ln-js [data-anim-high].ln-hidden .line > .ln-line-in { transform: translateY(110%); }
+
+html.ln-js [data-anim-high].ln-in .line { clip-path: inset(-35% -8% 0% -8%); }
+
+html.ln-js [data-anim-high].ln-in .line > .ln-line-in  {
+  transform: translateY(0);
+  transition: transform 0.95s var(--ln-ease-out);
+  transition-delay: calc(var(--ln-i, 0) * 70ms + var(--ln-delay, 0ms));
+}
+
+html.ln-js [data-anim-high].ln-done .line { clip-path: none; }
+
+/* highlight sweep: the colour named in data-anim-high="right, lime" */
+html.ln-js [data-anim-high] .line::after  {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--ln-sweep, transparent);
+  transform: scaleX(0);
+  transform-origin: var(--ln-sweep-origin, left center);
+  opacity: 0.35;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+html.ln-js [data-anim-high].ln-in .line::after  {
+  animation: ln-sweep 1.05s var(--ln-ease-out) both;
+  animation-delay: calc(var(--ln-i, 0) * 70ms + var(--ln-delay, 0ms));
+}
+
+@keyframes ln-sweep {
+  0% { transform: scaleX(0); opacity: 0.5; }
+  55% { transform: scaleX(1); opacity: 0.28; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+/* character stagger (nav links, buttons, eyebrows) */
+html.ln-js .ln-chars.ln-hidden .char { opacity: 0; transform: translateY(0.55em) rotate(2deg); }
+
+html.ln-js .ln-chars.ln-in .char  {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s linear, transform 0.65s var(--ln-ease-out);
+  transition-delay: calc(var(--ln-i, 0) * 22ms);
+}
+
+/* the hover trick the site already ships: text-shadow paints a second copy
+   below, the clip wrapper hides it, hovering slides the real text up */
+html.ln-js [data-anim='text-hover'] .btn-text{ transition: transform 0.55s var(--ln-ease); }
+
+@media (hover: hover) and (pointer: fine) {
+  html.ln-js [data-anim='text-hover']:hover .btn-text{ transform: translateY(calc(-1 * var(--text-offset, 1.1em))); }
+  html.ln-js [data-btn-rive-hover]:hover .ln-arrow svg{ transform: translate(2px, -2px); }
+  html.ln-js [data-nav-link-highlight]:hover{ color: var(--ln-lime); }
+}
+
+html.ln-js [data-nav-link-highlight]{ transition: color 0.4s var(--ln-ease); }
+
+/* ---------------------------------------------------------------------
+   4 · Rive / WebGL stand-ins
+   --------------------------------------------------------------------- */
+
+html.ln-js canvas[data-rive-object],
+html.ln-js canvas[data-rive-primary],
+html.ln-js canvas[data-rive-ln4],
+html.ln-js canvas[data-rive-nav-object],
+html.ln-js canvas[data-rive-nav-hamburger],
+html.ln-js canvas[data-rive-mob-landscape]{ display: none; }
+
+/* the capture ships static placeholders for several Rive objects — show them */
+html.ln-js [data-rive-placeholder] { display: block !important; }
+
+.ln-rive-fallback { width: 100%; height: 100%; display: block; object-fit: contain; }
+
+.ln-arrow { width: 100%; height: 100%; display: block; color: currentColor; }
+.ln-arrow svg { width: 100%; height: 100%; display: block; transition: transform 0.45s var(--ln-ease); }
+
+.ln-circuit { width: 100%; height: 100%; display: block; overflow: visible; }
+
+.ln-circuit .ln-track-line  {
+  stroke-dasharray: 6 10;
+  animation: ln-dash 3.4s linear infinite;
+}
+
+@keyframes ln-dash { to { stroke-dashoffset: -64; } }
+
+/* WebGL mounts: whatever the site CSS decided about their box, fill it */
+html.ln-js .gl-background canvas,
+html.ln-js .gl-canvas canvas,
+html.ln-js .gl-carousel canvas,
+html.ln-js .gl-wrap canvas{ display: block; width: 100%; height: 100%; }
+
+/* the hero keeps an ambient wash even if its mount has no box */
+.ln-hero-ambient  {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(58% 46% at 72% 26%, rgba(210, 255, 0, 0.16), transparent 68%),
+    radial-gradient(72% 62% at 18% 82%, rgba(47, 76, 60, 0.72), transparent 70%);
+}
+
+/* ---------------------------------------------------------------------
+   5 · scroll-driven pieces
+   --------------------------------------------------------------------- */
+
+html.ln-js .scroll-indicator-bar{ transform-origin: 50% 0%; will-change: transform; }
+
+html.ln-js .horizontal-track { will-change: transform; }
+
+html.ln-js .horizontal-pin-sticky { backface-visibility: hidden; }
+
+/* helmet hall of fame — stagger in, hover art is already in the page CSS */
+html.ln-js .helmet-grid-item-w  {
+  opacity: 0;
+  transform: translateY(2.5rem);
+  transition: opacity 0.75s var(--ln-ease-out), transform 0.85s var(--ln-ease-out);
+  transition-delay: calc(var(--ln-i, 0) * 55ms);
+}
+
+html.ln-js .helmet-grid-item-w.ln-in { opacity: 1; transform: none; }
+
+/* generic reveal for images / cards that have no data-anim hook */
+html.ln-js [data-ln-reveal]  {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 0.8s var(--ln-ease-out), transform 0.9s var(--ln-ease-out);
+  transition-delay: calc(var(--ln-i, 0) * 70ms);
+}
+
+html.ln-js [data-ln-reveal].ln-in { opacity: 1; transform: none; }
+
+/* on/off track sticky diptych */
+html.ln-js .otot-home-text-col{ transition: opacity 0.6s var(--ln-ease), transform 0.7s var(--ln-ease); }
+
+html.ln-js .otot-home-text-col { opacity: 0.42; }
+
+html.ln-js .otot-home-text-col.ln-active { opacity: 1; }
+
+html.ln-js .otot-home-img-w{ transition: opacity 0.7s var(--ln-ease), transform 1.2s var(--ln-ease); }
+
+/* social cards: the row becomes a draggable filmstrip */
+html.ln-js [data-social-callout='wrap'] { cursor: grab; }
+html.ln-js [data-social-callout='wrap'].ln-dragging { cursor: grabbing; }
+
+html.ln-js [data-video-stream] img  {
+  transition: transform 1.1s var(--ln-ease-out), filter 0.6s var(--ln-ease);
+}
+
+html.ln-js [data-video-stream-wrap]:hover [data-video-stream] img { transform: scale(1.045); }
+
+/* marquees never show a scrollbar and never overflow the page */
+html.ln-js [data-marquee-scroll-target]{ will-change: transform; }
+
+html.ln-js .marquee-advanced,
+html.ln-js .marquee-adv-row{ overflow: hidden; }
+
+/* ---------------------------------------------------------------------
+   6 · pages this build had to invent (nav/footer come from the capture)
+   --------------------------------------------------------------------- */
+
+.ln-stub { position: relative; background-color: var(--ln-dark-green); color: var(--ln-white); }
+
+.ln-stub-c { padding-top: 9rem; padding-bottom: 6rem; }
+
+.ln-stub-head { max-width: 60rem; }
+
+.ln-stub-title { margin-top: 1rem; }
+
+.ln-stub-body { margin-top: 2.5rem; max-width: 46rem; display: flex; flex-direction: column; gap: 2rem; }
+
+.ln-stub-lede { max-width: 40rem; }
+
+.ln-note  {
+  border-left: 2px solid var(--ln-lime);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 44rem;
+}
+
+.ln-note code  {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  color: var(--ln-lime);
+}
+
+.ln-stub-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+
+.ln-btn-ghost { border: 1px solid currentColor; }
+
+@media (max-width: 767px) {
+  .ln-stub-c { padding-top: 7rem; padding-bottom: 4rem; }
+}
+
+/* ---------------------------------------------------------------------
+   7 · reduced motion
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html.ln-js [data-anim-high].ln-hidden .line > .ln-line-in,
+  html.ln-js .ln-chars.ln-hidden .char,
+  html.ln-js .helmet-grid-item-w,
+  html.ln-js [data-ln-reveal]  {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  html.ln-js [data-anim-high] .line::after { animation: none !important; }
+
+  .ln-circuit .ln-track-line { animation: none !important; }
+
+  [data-anim='text-hover'] .btn-text { transition: none; }
+}
+
+/* ---------------------------------------------------------------------
+   8 · pieces the engine adds at runtime
+   --------------------------------------------------------------------- */
+
+.ln-canvas-hidden { display: none !important; }
+
+.ln-arrow-svg { width: 100%; height: 100%; display: block; transition: transform 0.45s var(--ln-ease); }
+
+@media (hover: hover) and (pointer: fine) {
+  html.ln-js [data-btn-rive-hover]:hover .ln-arrow-svg{ transform: translate(2px, -2px); }
+}
+
+.ln-helmet-svg { width: 100%; height: 100%; display: block; }
+
+.ln-circuit .ln-track-base { opacity: 0.9; }
+
+html.ln-js .gl-background .ln-gl,
+html.ln-js .gl-canvas .ln-gl,
+html.ln-js .gl-carousel .ln-gl{ display: block; width: 100%; height: 100%; }
+
+/* film grain — desktop only, it costs a composite layer */
+@media (min-width: 992px) {
+  .ln-grain  {
+    position: fixed;
+    inset: 0;
+    z-index: 8500;
+    pointer-events: none;
+    opacity: 0.055;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+    background-size: 180px 180px;
+  }
+}
+
+/* hero intro */
+html.ln-js .ln-hero-pending { opacity: 0; transform: translateY(1.15rem); }
+
+html.ln-js .ln-hero-in  {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.9s var(--ln-ease-out) calc(var(--ln-i, 0) * 60ms),
+    transform 1s var(--ln-ease-out) calc(var(--ln-i, 0) * 60ms),
+    clip-path 0.85s var(--ln-ease) calc(var(--ln-i, 0) * 60ms);
+}
+
+html.ln-js .home-hero-next-race-w.ln-hero-in { opacity: var(--ln-hero-fade, 1); }
+
+/* "tap to lock" — touch only */
+html.ln-js:not(.ln-touch) .home-hero-touch-controls-w { display: none; }
+
+html.ln-js [data-home-swipe-desc] { display: none; }
+
+html.ln-js [data-home-swipe-wrap]:not(.is-locked) [data-home-swipe-desc='unlocked'] { display: block; }
+
+html.ln-js [data-home-swipe-wrap].is-locked [data-home-swipe-desc='locked'] { display: block; }
+
+html.ln-js .btn-rive-w.is-locked { display: none; }
+
+html.ln-js [data-home-swipe-wrap].is-locked .btn-rive-w.is-locked { display: block; }
+
+html.ln-js [data-home-swipe-wrap].is-locked .btn-rive-w.is-unlocked { display: none; }
+
+/* menu collage hover — uses the independent `scale` property so it never
+   fights the stagger transform on the same element */
+html.ln-js .nav-menu-img-w{ transition: scale 0.85s var(--ln-ease-out), opacity 0.6s var(--ln-ease), transform 0.7s var(--ln-ease-out); }
+
+html.ln-js .nav-menu-img-w.ln-hover{ scale: 1.035; }
+
+/* on/off track diptych */
+html.ln-js .otot-home-img-w{ transition: opacity 0.8s var(--ln-ease), scale 1.3s var(--ln-ease); }
+
+html.ln-js .otot-home-img-w:not(.ln-active) { opacity: 0.72; scale: 1.03; }

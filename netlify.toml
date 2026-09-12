@@ -1,0 +1,21 @@
+# Netlify — repo-connected deploys.
+#
+# The site is hand-built: no bundler, no framework, no dependencies. Netlify's
+# post-processing (bundling, minification, asset rewriting, HTML pretty-print)
+# is switched off so it cannot touch the capture's markup or the restored
+# OFF+BRAND engine tags.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[build.processing]
+  skip_processing = true
+
+# Response headers are written by the build into dist/_headers, so a
+# drag-and-drop deploy of dist/ behaves exactly like a repo-connected one.
+# Routes are directories with an index.html (pretty URLs, no rules needed) and
+# dist/404.html is Netlify's automatic custom 404.

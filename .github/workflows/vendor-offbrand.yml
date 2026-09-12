@@ -1,0 +1,62 @@
+# vendor-offbrand.yml
+#
+# One-shot asset harvester.
+#
+# The animation engine for landonorris.com is OFF+BRAND's bundle. It lives on
+# two hosts:
+#
+#   assets.itsoffbrand.io  — engine bundle, Rive art           (open)
+#   lando.itsoffbrand.io   — the live bundle, the WebGL hero    (answers
+#                            "Access denied - Invalid referrer" to every
+#                            origin that is not landonorris.com)
+#
+# A runner has no origin, so it can ask for both — and the Wayback Machine has
+# every one of these files archived as a second source. This workflow downloads
+# them into vendor/ and commits them, which is what lets the rebuilt site run
+# the *real* engine instead of a frozen page.
+#
+# It is safe to re-run: `npm run vendor:status` prints what is present, and the
+# workflow only commits when a file is new or changed.
+
+name: vendor-offbrand-assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/01a093d0-landnr]
+    paths: ['.github/workflows/vendor-offbrand.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vendor-offbrand
+  cancel-in-progress: false
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: arena/01a093d0-landnr
+          fetch-depth: 1
+
+      - name: Download the engine and every asset it fetches
+        run: bash scripts/vendor/fetch.sh
+
+      - name: Report what the engine asks for
+        run: bash scripts/vendor/inspect.sh
+
+      - name: Commit
+        run: |
+          git config user.name  "arena-ai-coding-agent[bot]"
+          git config user.email "arena-ai-coding-agent[bot]@users.noreply.github.com"
+          git add -A vendor scripts/vendor
+          if git diff --cached --quiet; then
+            echo "vendor/ already up to date"
+          else
+            git commit -m "Vendor the OFF+BRAND engine and its Rive/WebGL assets"
+            git push origin HEAD:arena/01a093d0-landnr
+          fi
