@@ -113,6 +113,46 @@ fetch_one "https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.
 fetch_one "https://cdn.prod.website-files.com/$WF/67bc6274c5b4108b123aa4d5_MonaSans-VariableFont_wdth%2Cwght.woff2" ""
 
 # ---------------------------------------------------------------------------
+# 4b — assets the engine names explicitly but the archive never crawled.
+#      These paths are read straight out of `window.landoGL.assets` in the
+#      harvested bundle: the ktx2 set is what the WebGL hero uses below 992px,
+#      the basis transcoder decodes it.
+# ---------------------------------------------------------------------------
+echo "== extra engine assets"
+EXTRA_HOST="https://lando.itsoffbrand.io"
+EXTRA_PATHS="
+/gl/basis/basis_transcoder.js
+/gl/basis/basis_transcoder.wasm
+/gl/hdri/studio_small_08_1k--dark.hdr
+/gl/models/sotd.glb
+/gl/textures/head/webp/roughness.webp
+/gl/textures/head/webp/shadow-to-zip-edit.webp
+/gl/textures/head/ktx2/diffuse.ktx2
+/gl/textures/head/ktx2/depth.ktx2
+/gl/textures/head/ktx2/alpha.ktx2
+/gl/textures/head/ktx2/normal.ktx2
+/gl/textures/head/ktx2/roughness.ktx2
+/gl/textures/head/ktx2/shadow.ktx2
+/gl/textures/head/ktx2/shadow-softer-edit.ktx2
+/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
+/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
+/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
+/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
+/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
+/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
+/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
+/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
+/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
+/gl/textures/glass/ktx2/Metallic.ktx2
+/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
+/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
+/dev-js/canvas_advanced.wasm
+"
+for extra_path in $EXTRA_PATHS; do
+  fetch_one "$EXTRA_HOST$extra_path" "" || echo "   not on the live host: $extra_path"
+done
+
+# ---------------------------------------------------------------------------
 # 5 — manifest
 # ---------------------------------------------------------------------------
 echo "== manifest"
