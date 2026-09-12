@@ -44,6 +44,7 @@ import {
   textContent,
   walkNodes,
 } from './html.mjs';
+import { DISABLE_LANDO_GL } from '../vendor/localize.mjs';
 
 export const SITE_ORIGIN = 'https://landonorris.com';
 
@@ -336,6 +337,14 @@ export function cleanDocument(root, report = {}, { engineSrc = null, localWebflo
 const HEAD_BOOT_LOCAL = `<script>document.documentElement.classList.add('ln-js');</script>`;
 const HEAD_BOOT_REAL = `<script>document.documentElement.classList.add('ln-waiting');</script>`;
 
+/* The engine's WebGL layer is a 3D scan of Lando Norris's head, plus his
+   helmet and track models — not this site's business. Setting this flag leaves
+   the bundle's GL instance null, which every entry point into it already
+   guards against, so Lenis, ScrollTrigger, Rive and the transitions still boot
+   untouched. Inline and therefore evaluated before the deferred bundle.
+   See scripts/vendor/localize.mjs → DISABLE_LANDO_GL. */
+const LANDO_GL_OFF = `<script>window.__lnLandoGL=false;</script>`;
+
 const NOSCRIPT = `<noscript><style>
 .transition-w{display:none !important}
 .page-w,.main-w{opacity:1 !important;visibility:visible !important;transform:none !important}
@@ -431,6 +440,7 @@ export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buil
   append(head, fragment(
     `<link rel="stylesheet" href="${stylesheet}">`
     + (realEngine ? HEAD_BOOT_REAL : HEAD_BOOT_LOCAL)
+    + (realEngine && DISABLE_LANDO_GL ? LANDO_GL_OFF : '')
     + NOSCRIPT
     + (buildStamp ? `<!-- ${buildStamp} -->` : ''),
   ));

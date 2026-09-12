@@ -17,7 +17,12 @@
  * that mirror into `dist/assets/vendor/` and rewrites the handful of URL
  * literals inside the engine bundle so every request it makes is same-origin.
  *
- * Nothing is patched except URLs — the engine that runs is the engine the
+ * Two things are patched, and both are recorded in the build report:
+ *
+ *   1. those URL literals, and
+ *   2. one `if` in the WebGL boot — see DISABLE_LANDO_GL below.
+ *
+ * Everything else is byte-identical: the engine that runs is the engine the
  * live site runs.
  */
 
@@ -63,6 +68,37 @@ const WASM_REWRITES = [
     (_, __, file) => `"/${NPM_DIST}/${file}"`],
 ];
 
+/**
+ * This site is not Lando Norris's, so the engine's WebGL layer — a 3D scan of
+ * his head, his helmet models, his track models, ~15 MB of somebody else's
+ * face — has to go. The hero is ours instead (src/js/hero-ash.js).
+ *
+ * It switches off cleanly because of how the bundle is written: the GL
+ * instance is assigned once,
+ *
+ *   if (eR.isWebGL2Available()) bI = new RQ({ canvas: "canvas.gl" });
+ *
+ * it starts life as `null`, and every one of the four entry points into it is
+ * guarded (`if (bI) await bI.load()`, `if (bI) await bI.init()`, …). Leave it
+ * null and the whole 3D layer never exists: no asset downloads, no canvas, no
+ * scenes — while Lenis, ScrollTrigger, Rive and the page transitions come up
+ * exactly as they did before, because the boot chain only ever *awaits* those
+ * guarded functions.
+ *
+ * The patch below is inert on its own — it just makes the assignment
+ * conditional on `window.__lnLandoGL`. DISABLE_LANDO_GL is what sets that flag
+ * in the page and stops the gl/ mirror shipping. Matched by shape, not by the
+ * minified names, so it survives a different build of the bundle.
+ */
+const GL_PATCHES = [
+  [/if\((\w+)\.isWebGL2Available\(\)\)(\w+)=new (\w+)\(\{canvas:"canvas\.gl"\}\)/g,
+    (_m, test, instance, ctor) =>
+      `if(${test}.isWebGL2Available()&&window.__lnLandoGL!==false)${instance}=new ${ctor}({canvas:"canvas.gl"})`],
+];
+
+/** Build-time switch: no Lando WebGL, and don't ship his 3D assets. */
+export const DISABLE_LANDO_GL = true;
+
 /** Mirror subtrees that ship. Everything else in vendor/ is a spare copy. */
 const SHIP = [
   'lando.itsoffbrand.io/gl',
@@ -71,6 +107,9 @@ const SHIP = [
   'cdn.prod.website-files.com',
   'd3e54v103j8qbb.cloudfront.net',
 ];
+
+/** Subtrees that only exist to feed the engine's WebGL layer. */
+const SHIP_GL_ONLY = ['lando.itsoffbrand.io/gl'];
 
 /** Suffixes worth shipping from the Webflow/jQuery mirror. */
 const SHIP_EXT = ['.css', '.js', '.woff2', '.woff'];
@@ -88,6 +127,13 @@ export function localizeEngine(code) {
     out = out.replace(pattern, (...args) => {
       const key = `rive ${args[2]}`;
       hits[key] = (hits[key] || 0) + 1;
+      return replacement(...args);
+    });
+  }
+
+  for (const [pattern, replacement] of GL_PATCHES) {
+    out = out.replace(pattern, (...args) => {
+      hits['hero-gl switch'] = (hits['hero-gl switch'] || 0) + 1;
       return replacement(...args);
     });
   }
@@ -117,8 +163,10 @@ export async function collectVendor() {
   const { code, hits } = localizeEngine(raw);
   files.push({ path: ENGINE_DIST, body: Buffer.from(code, 'utf8') });
 
-  // 2 — the mirrored hosts
+  // 2 — the mirrored hosts. Lando's 3D asset tree only exists to feed the
+  //     WebGL layer, so when that layer is switched off it does not ship.
   for (const sub of SHIP) {
+    if (DISABLE_LANDO_GL && SHIP_GL_ONLY.includes(sub)) continue;
     const root = join(OFFBRAND, sub);
     if (!existsSync(root)) continue;
     for (const entry of await walk(root)) {

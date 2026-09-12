@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 import { parse, serialize, findAll, isElement, getAttr, hasClass } from './lib/html.mjs';
 import { buildHome, buildSubPages, SUB_PAGES, SITE_ORIGIN } from './lib/transform.mjs';
-import { collectVendor, localWebflowPaths, vendorAvailable, ENGINE_DIST } from './vendor/localize.mjs';
+import { collectVendor, localWebflowPaths, vendorAvailable, ENGINE_DIST, DISABLE_LANDO_GL } from './vendor/localize.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(here, '..');
@@ -250,20 +250,26 @@ function runChecks({ home, subs, assets, vendor, engineSrc }) {
     for (const host of ['https://lando.itsoffbrand.io', 'https://assets.itsoffbrand.io', 'https://unpkg.com/', 'https://cdn.jsdelivr.net/npm/']) {
       if (code.includes(host)) problems.push(`vendored engine still calls out to ${host}`);
     }
-    for (const must of [
+    // The gl/ entries only matter when the engine's WebGL layer is live; with
+    // it switched off those URLs are unreachable code paths (see localize.mjs).
+    const mustShip = [
       '/assets/vendor/offbrand/lando.itsoffbrand.io/rive/page-transition.riv',
       '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/reef.riv',
       '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/btn-ui.riv',
+      '/assets/vendor/npm/rive.wasm',
+    ];
+    if (!DISABLE_LANDO_GL) mustShip.push(
       '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/models/helmet-21.glb',
       '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/draco/draco_decoder.wasm',
-      '/assets/vendor/npm/rive.wasm',
-    ]) {
+    );
+    for (const must of mustShip) {
       if (!vendorPaths.has(must)) problems.push(`engine asset missing from the build: ${must}`);
     }
     // every mirror URL the bundle now asks for should resolve to a file we ship
     for (const ref of new Set(code.match(/"\/assets\/vendor\/[^"]+"/g) || [])) {
       const url = ref.slice(1, -1);
       if (vendorPaths.has(url)) continue;
+      if (DISABLE_LANDO_GL && url.includes('/lando.itsoffbrand.io/gl')) continue;
       // base URLs are concatenated with a file name at runtime
       if (!vendor.files.some((f) => `/${f.path}`.startsWith(url))) {
         problems.push(`vendored engine asks for a file that is not in the build: ${url}`);
