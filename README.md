@@ -236,43 +236,6 @@ the real engine, so the local preloader art never paints over the real one.
 `npm run build -- --local` (or `LANDNR_ENGINE=local`) omits the bundle entirely
 and ships the fallback engine on its own.
 
-## The hero
-
-This site belongs to someone who has never shown his face, so the hero says
-that out loud: a black mannequin — ball-jointed, matte, featureless — stands
-where a person would, and the picture he gives the world instead floats a
-hand's breadth in front of it. Move the pointer over the picture and it
-disintegrates: each fragment of the plane owns a noise threshold, and as the
-dissolve front passes it the fragment is thrown outwards and up on a curl of
-simplex noise, burning lime at the tear, until only the mannequin is left —
-which turns, slowly, to face whatever is looking at it. Move away and the
-picture settles back.
-
-It is real 3D (`src/js/hero-ash.js`, three.js vendored byte-exact from npm at
-`vendor/npm/three@0.186.0/`, served from `/assets/vendor/npm/three/`). The
-mannequin is assembled from primitives, so the site ships nobody else's 3D
-scan; the engine's own WebGL layer — a scan of Lando Norris's head and his
-helmet models — is switched off at build time by leaving the bundle's GL
-instance null, which every entry point into it already guards against
-(`scripts/vendor/localize.mjs` → `DISABLE_LANDO_GL`).
-
-**The portrait.** Drop any flat-background picture at `source/ash-hero.png`
-(`.webp` / `.jpg` work too) and the build ships it; the hero keys the backdrop
-out in the browser by region-growing from the image border — gradient-limited,
-so a vignetted sweep still clears while white sleeves and eye-whites, which
-merely share the backdrop's colour, survive. Already-transparent files pass
-through untouched. With nothing dropped in, a procedurally drawn silhouette
-stands in so the effect is demonstrable from a clean clone.
-
-The keying has a unit test (`npm run test:key`) that runs the real algorithm
-against a synthetic studio portrait with an enclosed white disc, a sleeve
-cropped by the frame, and a vignetted backdrop — the three ways this kind of
-key fails invisibly.
-
-No WebGL2, no three.js, or a `prefers-reduced-motion` preference degrades to a
-layered CSS hero (SVG mannequin, portrait lifting off it on hover) rather than
-to nothing.
-
 ## The engine (fallback)
 
 `src/js/` — fourteen ES modules, no framework, no build step. Boot order is in

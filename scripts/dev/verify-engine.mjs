@@ -8,22 +8,18 @@
  * The page froze for one reason: the bundle's boot chain awaited a file that
  * its host refused to serve. So this harness does not trust the build report —
  * it reads the *built* bundle, derives every asset the engine will ask for
- * (Rive artboards, the page transition, the Rive WASM — and, when the engine's
- * own WebGL layer is switched on, its models, textures, HDRIs and decoders),
- * requests each one over HTTP, and fails if any of them is missing, empty or
- * served with the wrong content type.
- *
- * It also walks this project's own module graph and checks the vendored
- * three.js the local hero imports, so nothing the page needs is a guess.
+ * (Rive artboards, the page transition, the WebGL hero's models, textures in
+ * both the desktop `webp` and the mobile `ktx2` set, the HDRIs, the Draco and
+ * Basis decoders, the Rive WASM), requests each one over HTTP, and fails if any
+ * of them is missing, empty or served with the wrong content type.
  *
  * It also fails if the bundle still contains a cross-origin URL for anything it
  * needs to boot — the whole point of vendoring is that there is none.
  */
 
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { DISABLE_LANDO_GL } from '../vendor/localize.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const DIST = resolve(ROOT, 'dist');
@@ -47,7 +43,7 @@ const glBase = literal(/"(\/assets\/vendor\/[^"]*lando\.itsoffbrand\.io\/gl)"/);
 // rive/, the page transition under lando.itsoffbrand.io/rive/. Both mirrored.
 const riveBases = [...engine.matchAll(/"(\/assets\/vendor\/[^"]*\/rive\/)"/g)].map((m) => m[1]);
 const wasmFiles = [...engine.matchAll(/"(\/assets\/vendor\/npm\/[^"]*\.wasm)"/g)].map((m) => m[1]);
-if (!glBase && !DISABLE_LANDO_GL) fail('no local WebGL base in the bundle — the rewrite did not run');
+if (!glBase) fail('no local WebGL base in the bundle — the rewrite did not run');
 if (!riveBases.length) fail('no local Rive base in the bundle — the rewrite did not run');
 if (!wasmFiles.length) fail('no local Rive WASM path in the bundle — the rewrite did not run');
 
@@ -74,47 +70,6 @@ for (const path of strings().filter((s) => s.startsWith('/') && ASSET.test(s) &&
   add(path.startsWith('/assets/') ? path : `${glBase}${path}`, 'WebGL asset');
 }
 for (const file of wasmFiles) add(file, 'Rive WASM runtime (@rive-app/canvas-lite 2.26.4)');
-
-/* ------------------------------------------------------------------ *
- * 1b — vendored three.js, and this project's own module graph
- * ------------------------------------------------------------------ */
-
-const npmDir = resolve(DIST, 'assets/vendor/npm');
-if (existsSync(npmDir)) {
-  for (const pkg of await readdir(npmDir)) {
-    if (!pkg.startsWith('three@')) continue;
-    for (const file of await readdir(resolve(npmDir, pkg))) {
-      if (!file.endsWith('.js')) continue;
-      add(`/assets/vendor/npm/${pkg}/${file}`, `vendored ${pkg} — the local hero's 3D`);
-    }
-  }
-}
-
-/* every relative import in our own modules has to resolve over HTTP too */
-const jsDir = resolve(DIST, 'assets/js');
-if (existsSync(jsDir)) {
-  for (const file of await readdir(jsDir)) {
-    if (!file.endsWith('.js')) continue;
-    const code = await readFile(resolve(jsDir, file), 'utf8');
-    for (const m of code.matchAll(/\bfrom\s*['"]([^'"]+)['"]/g)) {
-      add(resolveImport(`/assets/js/${file}`, m[1]), `imported by ${file}`);
-    }
-  }
-}
-
-/** Resolve a module specifier the way a browser would, against its own URL. */
-function resolveImport(fromUrl, spec) {
-  if (/^[a-z@]/i.test(spec) && !spec.startsWith('.')) return null; // bare: an import map's business
-  if (spec.startsWith('/')) return spec;
-  const parts = fromUrl.split('/').slice(0, -1);
-  for (const seg of spec.split('/')) {
-    if (seg === '.' || seg === '') continue;
-    if (seg === '..') parts.pop();
-    else parts.push(seg);
-  }
-  return parts.join('/');
-}
-
 
 /* ------------------------------------------------------------------ *
  * 2 — request them
@@ -213,10 +168,6 @@ function templatePaths() {
 
 function add(url, why) {
   if (!url || url.includes('undefined')) return;
-  // With the engine's WebGL layer switched off (DISABLE_LANDO_GL) those URLs
-  // are unreachable code paths inside the bundle — verifying them would only
-  // assert that Lando Norris's head scan still ships with somebody else's site.
-  if (DISABLE_LANDO_GL && url.includes('/lando.itsoffbrand.io/gl')) return;
   if (!wanted.has(url)) wanted.set(url, why);
 }
 

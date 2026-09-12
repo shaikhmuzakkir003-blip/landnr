@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 import { parse, serialize, findAll, isElement, getAttr, hasClass } from './lib/html.mjs';
 import { buildHome, buildSubPages, SUB_PAGES, SITE_ORIGIN } from './lib/transform.mjs';
-import { collectVendor, localWebflowPaths, vendorAvailable, ENGINE_DIST, DISABLE_LANDO_GL } from './vendor/localize.mjs';
+import { collectVendor, localWebflowPaths, vendorAvailable, ENGINE_DIST } from './vendor/localize.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(here, '..');
@@ -71,9 +71,6 @@ async function main() {
   const stamp = `built ${new Date().toISOString()} · landnr · homepage capture: Last Published Tue Aug 11 2026`;
   const home = buildHome(sourceHtml, { buildStamp: stamp, engineSrc, localWebflow });
   log('  repairs  ', JSON.stringify(home.report.repairs));
-  const content = home.report.content || {};
-  log('  content  ', `${content.swapped ?? 0} strings swapped`
-    + (content.missed?.length ? ` · ${content.missed.length} MISSED: ${content.missed.join(' | ')}` : ''));
   log('  removed  ', `${home.report.scriptsRemoved || 0} scripts, ${home.report.commentsRemoved || 0} comments, ${home.report.embedsRemoved || 0} empty embeds`);
 
   /* 3 — derived pages ------------------------------------------------- */
@@ -81,19 +78,6 @@ async function main() {
 
   /* 4 — assets -------------------------------------------------------- */
   const assets = await collectAssets(join(SRC, 'css'), join(SRC, 'js'));
-
-  /* 4b — the hero portrait -------------------------------------------- *
-   * Drop any flat-background picture at source/ash-hero.png (or .webp /
-   * .jpg) and it ships verbatim; src/js/hero-ash.js keys the backdrop out
-   * in the browser. With nothing there the hero draws its own stand-in. */
-  const portraits = [];
-  for (const name of ['ash-hero.png', 'ash-hero.webp', 'ash-hero.jpg', 'ash-hero.jpeg']) {
-    const at = join(ROOT, 'source', name);
-    if (existsSync(at)) portraits.push({ path: join('assets', 'img', name), body: await readFile(at), binary: true });
-  }
-  log('  portrait ', portraits.length
-    ? `${portraits.map((f) => f.path).join(', ')} (${(portraits[0].body.length / 1024).toFixed(0)} kB)`
-    : 'none dropped in — the hero draws its stand-in');
 
   /* 5 — checks -------------------------------------------------------- */
   const problems = runChecks({ home, subs, assets, vendor, engineSrc });
@@ -106,7 +90,6 @@ async function main() {
       body: html,
     })),
     ...assets.map((a) => ({ path: join('assets', a.rel), body: a.body, binary: a.binary })),
-    ...portraits,
     ...vendor.files,
     ...deployConfig(),
   ];
@@ -267,26 +250,20 @@ function runChecks({ home, subs, assets, vendor, engineSrc }) {
     for (const host of ['https://lando.itsoffbrand.io', 'https://assets.itsoffbrand.io', 'https://unpkg.com/', 'https://cdn.jsdelivr.net/npm/']) {
       if (code.includes(host)) problems.push(`vendored engine still calls out to ${host}`);
     }
-    // The gl/ entries only matter when the engine's WebGL layer is live; with
-    // it switched off those URLs are unreachable code paths (see localize.mjs).
-    const mustShip = [
+    for (const must of [
       '/assets/vendor/offbrand/lando.itsoffbrand.io/rive/page-transition.riv',
       '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/reef.riv',
       '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/btn-ui.riv',
-      '/assets/vendor/npm/rive.wasm',
-    ];
-    if (!DISABLE_LANDO_GL) mustShip.push(
       '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/models/helmet-21.glb',
       '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/draco/draco_decoder.wasm',
-    );
-    for (const must of mustShip) {
+      '/assets/vendor/npm/rive.wasm',
+    ]) {
       if (!vendorPaths.has(must)) problems.push(`engine asset missing from the build: ${must}`);
     }
     // every mirror URL the bundle now asks for should resolve to a file we ship
     for (const ref of new Set(code.match(/"\/assets\/vendor\/[^"]+"/g) || [])) {
       const url = ref.slice(1, -1);
       if (vendorPaths.has(url)) continue;
-      if (DISABLE_LANDO_GL && url.includes('/lando.itsoffbrand.io/gl')) continue;
       // base URLs are concatenated with a file name at runtime
       if (!vendor.files.some((f) => `/${f.path}`.startsWith(url))) {
         problems.push(`vendored engine asks for a file that is not in the build: ${url}`);

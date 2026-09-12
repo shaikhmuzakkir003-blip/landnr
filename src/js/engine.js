@@ -32,7 +32,6 @@ import { initSections, playHero, streamConfig } from './sections.js';
 import { initSmoothScroll, disable as disableSmoothScroll, scrollTo } from './smooth-scroll.js';
 import { initPreloader } from './preloader.js';
 import { initDiagnostics } from './diagnostics.js';
-import { initHeroAsh } from './hero-ash.js';
 
 const VERSION = '2.0.0';
 const startedAt = performance.now();
@@ -226,11 +225,6 @@ function detectBrowser() {
 function exposeApi() {
   const diagnostics = safe('diagnostics', () => initDiagnostics({ report, version: VERSION }));
   diagnosticsApi = diagnostics;
-  /* The hero is ours whichever engine ends up driving the page, so it starts
-     here rather than inside boot() — and it never takes the page down with it. */
-  safe('hero', () => {
-    initHeroAsh().catch((err) => note(`hero gave up: ${err?.message || err}`));
-  });
   window.landnr = {
     version: VERSION,
     report,
@@ -239,7 +233,6 @@ function exposeApi() {
     diagnostics: diagnostics?.show || (() => {}),
     hideDiagnostics: diagnostics?.hide || (() => {}),
     scrollTo,
-    hero: () => window.lnHero || null,
     openMenu: () => toggleMenu(true),
     closeMenu,
     toggleMenu,
