@@ -1,8 +1,7 @@
 
 === harvest
       2 MISSING
-     62 cached
-     24 live
+     86 cached
 -- missing:
    https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Metallic.ktx2
    https://lando.itsoffbrand.io/dev-js/canvas_advanced.wasm

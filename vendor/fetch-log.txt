@@ -1111,14 +1111,7 @@
 + '[' -n gl/basis/basis_transcoder.js ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js.part https://lando.itsoffbrand.io/gl/basis/basis_transcoder.js
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.js /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.js /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js
 + ok=63
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1133,14 +1126,7 @@
 + '[' -n gl/basis/basis_transcoder.wasm ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm.part https://lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
 + ok=64
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1155,14 +1141,7 @@
 + '[' -n gl/hdri/studio_small_08_1k--dark.hdr ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr.part https://lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
 + ok=65
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1177,14 +1156,7 @@
 + '[' -n gl/models/sotd.glb ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb.part https://lando.itsoffbrand.io/gl/models/sotd.glb
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/models/sotd.glb /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/models/sotd.glb /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb
 + ok=66
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1199,14 +1171,7 @@
 + '[' -n gl/textures/head/webp/roughness.webp ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp.part https://lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
 + ok=67
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1221,14 +1186,7 @@
 + '[' -n gl/textures/head/webp/shadow-to-zip-edit.webp ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp.part https://lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
 + ok=68
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1243,14 +1201,7 @@
 + '[' -n gl/textures/head/ktx2/diffuse.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
 + ok=69
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1265,14 +1216,7 @@
 + '[' -n gl/textures/head/ktx2/depth.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
 + ok=70
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1287,14 +1231,7 @@
 + '[' -n gl/textures/head/ktx2/alpha.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
 + ok=71
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1309,14 +1246,7 @@
 + '[' -n gl/textures/head/ktx2/normal.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
 + ok=72
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1331,14 +1261,7 @@
 + '[' -n gl/textures/head/ktx2/roughness.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
 + ok=73
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1353,14 +1276,7 @@
 + '[' -n gl/textures/head/ktx2/shadow.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
 + ok=74
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1375,14 +1291,7 @@
 + '[' -n gl/textures/head/ktx2/shadow-softer-edit.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
 + ok=75
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1397,14 +1306,7 @@
 + '[' -n gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2.part https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
 + ok=76
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1419,14 +1321,7 @@
 + '[' -n gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
 + ok=77
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1441,14 +1336,7 @@
 + '[' -n gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
 + ok=78
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1463,14 +1351,7 @@
 + '[' -n gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
 + ok=79
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1485,14 +1366,7 @@
 + '[' -n gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
 + ok=80
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1507,14 +1381,7 @@
 + '[' -n gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
 + ok=81
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1529,14 +1396,7 @@
 + '[' -n gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2.part https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
 + ok=82
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1551,14 +1411,7 @@
 + '[' -n gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2.part https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
 + ok=83
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1573,14 +1426,7 @@
 + '[' -n gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2.part https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
 + ok=84
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1617,14 +1463,7 @@
 + '[' -n gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2.part https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
 + ok=85
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1639,14 +1478,7 @@
 + '[' -n gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 ']'
 + dest=/home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
 + '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 ']'
-++ dirname /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
-+ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2
-+ curl -fsSL --max-time 45 --retry 1 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' -e https://landonorris.com/ -o /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2.part https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
-+ '[' -s /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2.part ']'
-+ head -c 64 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2.part
-+ grep -qi 'Access denied'
-+ mv /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2.part /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
-+ printf '%s\t%s\tlive\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
++ printf '%s\t%s\tcached\n' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
 + ok=86
 + return 0
 + for extra_path in $EXTRA_PATHS
@@ -1675,7 +1507,7 @@
 == manifest
 + echo '{'
 ++ date -u +%Y-%m-%dT%H:%M:%SZ
-+ echo '  "generatedAt": "2026-09-12T04:26:40Z",'
++ echo '  "generatedAt": "2026-09-12T04:42:10Z",'
 + echo '  "files": ['
 + first=1
 + IFS='	'
@@ -2306,7 +2138,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.js vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js 57529 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.js vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.js 57529 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm = - ']'
@@ -2316,7 +2148,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm 527333 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm vendor/offbrand/lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm 527333 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr = - ']'
@@ -2326,7 +2158,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr 392675 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr vendor/offbrand/lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr 392675 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb = - ']'
@@ -2336,7 +2168,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/models/sotd.glb vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb 29664 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/models/sotd.glb vendor/offbrand/lando.itsoffbrand.io/gl/models/sotd.glb 29664 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp = - ']'
@@ -2346,7 +2178,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp 125378 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp 125378 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp = - ']'
@@ -2356,7 +2188,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp 266780 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp 266780 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 = - ']'
@@ -2366,7 +2198,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 334987 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2 334987 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 = - ']'
@@ -2376,7 +2208,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 66599 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2 66599 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 = - ']'
@@ -2386,7 +2218,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 172037 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2 172037 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 = - ']'
@@ -2396,7 +2228,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 2429845 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2 2429845 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 = - ']'
@@ -2406,7 +2238,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 224594 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2 224594 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 = - ']'
@@ -2416,7 +2248,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 319542 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2 319542 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 = - ']'
@@ -2426,7 +2258,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 321721 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2 321721 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 = - ']'
@@ -2436,7 +2268,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 316808 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2 316808 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 = - ']'
@@ -2446,7 +2278,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 284653 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2 284653 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 = - ']'
@@ -2456,7 +2288,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 96371 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2 96371 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 = - ']'
@@ -2466,7 +2298,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 470727 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2 470727 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 = - ']'
@@ -2476,7 +2308,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 364243 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2 364243 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 = - ']'
@@ -2486,7 +2318,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 66610 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2 66610 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 = - ']'
@@ -2496,7 +2328,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 557386 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2 557386 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 = - ']'
@@ -2506,7 +2338,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 90920 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2 90920 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 = - ']'
@@ -2516,7 +2348,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 217570 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2 217570 cached
 + IFS='	'
 + read -r url dest how
 + '[' - = - ']'
@@ -2530,7 +2362,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 39065 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2 39065 cached
 + IFS='	'
 + read -r url dest how
 + '[' /home/runner/work/landnr/landnr/vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 = - ']'
@@ -2540,7 +2372,7 @@
 + '[' 0 -eq 0 ']'
 + echo ,
 + first=0
-+ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 15484 live
++ printf '    {"url": "%s", "path": "%s", "bytes": %s, "source": "%s"}' https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 vendor/offbrand/lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2 15484 cached
 + IFS='	'
 + read -r url dest how
 + '[' - = - ']'
