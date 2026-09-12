@@ -1,0 +1,34 @@
++ set -u
++++ dirname scripts/vendor/fetch.sh
+++ cd scripts/vendor/../..
+++ pwd
++ ROOT=/home/runner/work/landnr/landnr
++ OUT=/home/runner/work/landnr/landnr/vendor/offbrand
++ MANIFEST=/home/runner/work/landnr/landnr/vendor/manifest.json
++ UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36'
++ REFERER=https://landonorris.com/
++ mkdir -p /home/runner/work/landnr/landnr/vendor/offbrand
++ ok=0
++ missed=0
++ :
++ echo '== indexing lando.itsoffbrand.io'
+== indexing lando.itsoffbrand.io
++ cdx lando.itsoffbrand.io domain
++ curl -fsSL --max-time 60 --retry 2 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' 'https://web.archive.org/cdx/search/cdx?url=lando.itsoffbrand.io&matchType=domain&output=text&limit=5000&collapse=urlkey&filter=statuscode:200'
+++ wc -l
++ echo '   44 archived files'
+   44 archived files
++ echo '== indexing assets.itsoffbrand.io/lando'
+== indexing assets.itsoffbrand.io/lando
++ cdx assets.itsoffbrand.io/lando prefix
++ curl -fsSL --max-time 60 --retry 2 -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36' 'https://web.archive.org/cdx/search/cdx?url=assets.itsoffbrand.io/lando&matchType=prefix&output=text&limit=5000&collapse=urlkey&filter=statuscode:200'
+++ wc -l
++ echo '   12 archived files'
+   12 archived files
++ harvest_cdx /tmp/cdx-lando.txt
++ read -r _key ts original _rest
++ '[' -n https://lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.01.js ']'
++ case "$original" in
++ fetch_one https://lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.01.js 20251016004109
++ local url=https://lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.01.js ts=20251016004109
+scripts/vendor/fetch.sh: line 56: rest: unbound variable
