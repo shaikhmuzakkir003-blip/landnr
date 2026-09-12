@@ -1,7 +1,11 @@
 
 === harvest
-     62 live
+      2 MISSING
+     62 cached
+     24 live
 -- missing:
+   https://lando.itsoffbrand.io/gl/textures/glass/ktx2/Metallic.ktx2
+   https://lando.itsoffbrand.io/dev-js/canvas_advanced.wasm
 
 === files
    1457237  assets.itsoffbrand.io/lando/dev-js/lando-by-OFF+BRAND.js
@@ -26,28 +30,52 @@
    1323177  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js
    1323600  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold.js
    1323639  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.js
+     57529  lando.itsoffbrand.io/gl/basis/basis_transcoder.js
+    527333  lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
     285747  lando.itsoffbrand.io/gl/draco/draco_decoder.wasm
      58763  lando.itsoffbrand.io/gl/draco/draco_wasm_wrapper.js
     116588  lando.itsoffbrand.io/gl/fonts/Brier-Bold-02.webp
      89744  lando.itsoffbrand.io/gl/fonts/Brier-Bold-msdf.json
      24838  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-02.webp
       5164  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-msdf.json
+    392675  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
     175712  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--faded.hdr
     386788  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--light.hdr
     358984  lando.itsoffbrand.io/gl/models/disco-02.glb
     139492  lando.itsoffbrand.io/gl/models/helmet-21.glb
+     29664  lando.itsoffbrand.io/gl/models/sotd.glb
     463920  lando.itsoffbrand.io/gl/models/tracks/tracks-05.glb
     463904  lando.itsoffbrand.io/gl/models/tracks/tracks.glb
+     90920  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
+     39065  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
+     15484  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
+    217570  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
      44358  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_BaseColor.webp
      14748  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Metallic.webp
       8320  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Normal.webp
      21898  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Roughness.webp
+    172037  lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
+     66599  lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
+    334987  lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
+   2429845  lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
+    224594  lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
+    321721  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
+    316808  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
+    319542  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
      38874  lando.itsoffbrand.io/gl/textures/head/webp/alpha.webp
       3708  lando.itsoffbrand.io/gl/textures/head/webp/depth.webp
     292106  lando.itsoffbrand.io/gl/textures/head/webp/diffuse.webp
     150168  lando.itsoffbrand.io/gl/textures/head/webp/normal.webp
+    125378  lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
     285764  lando.itsoffbrand.io/gl/textures/head/webp/shadow-softer-edit.webp
+    266780  lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
     283478  lando.itsoffbrand.io/gl/textures/head/webp/shadow.webp
+     66610  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
+    557386  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
+    364243  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
+     96371  lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
+    470727  lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
+    284653  lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
      20486  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp
      64804  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Normal.webp
      25482  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp
@@ -450,6 +478,11 @@ https://unpkg.com/
       1 dispatchEvent(new CustomEvent("register"
       1 dispatchEvent(new CustomEvent("disco"
 
+=== urls inside basis_transcoder.js
+-- relative asset paths:
+"basis_transcoder.wasm"
+-- boot signals:
+
 === urls inside draco_wasm_wrapper.js
 -- relative asset paths:
 "draco_decoder.wasm"
@@ -468,6 +501,9 @@ https://unpkg.com/
 === gl files
     285747  lando.itsoffbrand.io/gl/draco/draco_decoder.wasm
      58763  lando.itsoffbrand.io/gl/draco/draco_wasm_wrapper.js
+     57529  lando.itsoffbrand.io/gl/basis/basis_transcoder.js
+    527333  lando.itsoffbrand.io/gl/basis/basis_transcoder.wasm
+    392675  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--dark.hdr
     386788  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--light.hdr
     175712  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--faded.hdr
      24838  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-02.webp
@@ -479,7 +515,17 @@ https://unpkg.com/
     292106  lando.itsoffbrand.io/gl/textures/head/webp/diffuse.webp
     285764  lando.itsoffbrand.io/gl/textures/head/webp/shadow-softer-edit.webp
     283478  lando.itsoffbrand.io/gl/textures/head/webp/shadow.webp
+    266780  lando.itsoffbrand.io/gl/textures/head/webp/shadow-to-zip-edit.webp
       3708  lando.itsoffbrand.io/gl/textures/head/webp/depth.webp
+    125378  lando.itsoffbrand.io/gl/textures/head/webp/roughness.webp
+    319542  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow.ktx2
+    316808  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-to-zip-edit.ktx2
+    224594  lando.itsoffbrand.io/gl/textures/head/ktx2/roughness.ktx2
+   2429845  lando.itsoffbrand.io/gl/textures/head/ktx2/normal.ktx2
+     66599  lando.itsoffbrand.io/gl/textures/head/ktx2/depth.ktx2
+    172037  lando.itsoffbrand.io/gl/textures/head/ktx2/alpha.ktx2
+    321721  lando.itsoffbrand.io/gl/textures/head/ktx2/shadow-softer-edit.ktx2
+    334987  lando.itsoffbrand.io/gl/textures/head/ktx2/diffuse.ktx2
      65794  lando.itsoffbrand.io/gl/textures/plastic/plastic__matcap-02.webp
       5790  lando.itsoffbrand.io/gl/textures/not-found/not-found-alpha-6.webp
       5790  lando.itsoffbrand.io/gl/textures/not-found/webp/not-found-alpha-6.webp
@@ -488,6 +534,10 @@ https://unpkg.com/
      44358  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_BaseColor.webp
      21898  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Roughness.webp
      14748  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Metallic.webp
+     90920  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_BaseColor.ktx2
+    217570  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Roughness.ktx2
+     15484  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Normal.ktx2
+     39065  lando.itsoffbrand.io/gl/textures/glass/ktx2/Norris_Glass_mat_Metallic.ktx2
     321508  lando.itsoffbrand.io/gl/textures/helmet/webp/gold/Norris_Helmet_mat_BaseColor.webp
     239032  lando.itsoffbrand.io/gl/textures/helmet/webp/lime/Norris_Helmet_mat_BaseColor.webp
     387608  lando.itsoffbrand.io/gl/textures/helmet/webp/grid/Norris_Helmet_mat_BaseColor.webp
@@ -500,11 +550,15 @@ https://unpkg.com/
     275282  lando.itsoffbrand.io/gl/textures/helmet/webp/google/Norris_Helmet_mat_BaseColor.webp
      25482  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp
      20486  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp
+    284653  lando.itsoffbrand.io/gl/textures/helmet/ktx2/gold/Norris_Helmet_mat_BaseColor.ktx2
+    364243  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Roughness.ktx2
+    557386  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Normal.ktx2
+     66610  lando.itsoffbrand.io/gl/textures/helmet/ktx2/Norris_Helmet_mat_Metallic.ktx2
+     96371  lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/Norris_Helmet_mat_BaseColor.ktx2
+    470727  lando.itsoffbrand.io/gl/textures/helmet/ktx2/disco/disco_mask-01.ktx2
      54010  lando.itsoffbrand.io/gl/textures/tracks/lando__matcap-02.webp
     139492  lando.itsoffbrand.io/gl/models/helmet-21.glb
     358984  lando.itsoffbrand.io/gl/models/disco-02.glb
-    463904  lando.itsoffbrand.io/gl/models/tracks/tracks.glb
-    463920  lando.itsoffbrand.io/gl/models/tracks/tracks-05.glb
 
 === css
     186727  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/css/lando-offbrand.shared.4f53262f0.css
