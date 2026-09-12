@@ -52,11 +52,15 @@ harvest_cdx() { # $1 = cdx file
 # 2 — the downloader
 # ---------------------------------------------------------------------------
 fetch_one() { # $1 = absolute url, $2 = wayback timestamp (optional)
-  local url="$1" ts="${2:-}"
-  local rest="${url#*://}" host="${rest%%/*}" path="${rest#*/}"
+  local url="$1"
+  local ts="${2:-}"
+  local rest host path dest
+  rest="${url#*://}"
+  host="${rest%%/*}"
+  path="${rest#*/}"
   path="${path%%\?*}"
   [ -n "$path" ] || path="index"
-  local dest="$OUT/$host/$path"
+  dest="$OUT/$host/$path"
 
   if [ -s "$dest" ]; then
     printf '%s\t%s\tcached\n' "$url" "$dest" >> "$ROOT/vendor/.fetched.tsv"
