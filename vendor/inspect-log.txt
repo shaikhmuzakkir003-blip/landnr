@@ -1,0 +1,511 @@
+
+=== harvest
+     62 live
+-- missing:
+
+=== files
+   1457237  assets.itsoffbrand.io/lando/dev-js/lando-by-OFF+BRAND.js
+    106783  assets.itsoffbrand.io/lando/dev-js/transitions-rive-isolate.js
+     19373  assets.itsoffbrand.io/lando/js/main.06.js
+     21966  assets.itsoffbrand.io/lando/js/main.10.js
+    546498  assets.itsoffbrand.io/lando/js/webgl.02.js
+      4144  assets.itsoffbrand.io/lando/rive/btn-ui.riv
+     36636  assets.itsoffbrand.io/lando/rive/circuits.riv
+      3770  assets.itsoffbrand.io/lando/rive/ln4.riv
+     52818  assets.itsoffbrand.io/lando/rive/mob-landscape.riv
+     68650  assets.itsoffbrand.io/lando/rive/phrases.riv
+     72667  assets.itsoffbrand.io/lando/rive/reef.riv
+     30851  assets.itsoffbrand.io/lando/rive/signature.riv
+    167476  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/67bc6274c5b4108b123aa4d5_MonaSans-VariableFont_wdth%2Cwght.woff2
+    186727  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/css/lando-offbrand.shared.4f53262f0.css
+    188318  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/css/lando-offbrand.shared.5b4e934f7.css
+      1062  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/js/lando-offbrand.751e0867.148dc658e77a3916.js
+     35992  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/js/lando-offbrand.schunk.7321a5097fb66f41.js
+     89476  d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js
+   1457248  lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.01.js
+   1323177  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js
+   1323600  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold.js
+   1323639  lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.js
+    285747  lando.itsoffbrand.io/gl/draco/draco_decoder.wasm
+     58763  lando.itsoffbrand.io/gl/draco/draco_wasm_wrapper.js
+    116588  lando.itsoffbrand.io/gl/fonts/Brier-Bold-02.webp
+     89744  lando.itsoffbrand.io/gl/fonts/Brier-Bold-msdf.json
+     24838  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-02.webp
+      5164  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-msdf.json
+    175712  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--faded.hdr
+    386788  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--light.hdr
+    358984  lando.itsoffbrand.io/gl/models/disco-02.glb
+    139492  lando.itsoffbrand.io/gl/models/helmet-21.glb
+    463920  lando.itsoffbrand.io/gl/models/tracks/tracks-05.glb
+    463904  lando.itsoffbrand.io/gl/models/tracks/tracks.glb
+     44358  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_BaseColor.webp
+     14748  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Metallic.webp
+      8320  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Normal.webp
+     21898  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Roughness.webp
+     38874  lando.itsoffbrand.io/gl/textures/head/webp/alpha.webp
+      3708  lando.itsoffbrand.io/gl/textures/head/webp/depth.webp
+    292106  lando.itsoffbrand.io/gl/textures/head/webp/diffuse.webp
+    150168  lando.itsoffbrand.io/gl/textures/head/webp/normal.webp
+    285764  lando.itsoffbrand.io/gl/textures/head/webp/shadow-softer-edit.webp
+    283478  lando.itsoffbrand.io/gl/textures/head/webp/shadow.webp
+     20486  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp
+     64804  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Normal.webp
+     25482  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp
+    231018  lando.itsoffbrand.io/gl/textures/helmet/webp/dark/Norris_Helmet_mat_BaseColor.webp
+    177136  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/Norris_Helmet_mat_BaseColor.webp
+    100940  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_lens-flare-15.webp
+     74998  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_mask-01.webp
+     64602  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_matcap-01.webp
+    321508  lando.itsoffbrand.io/gl/textures/helmet/webp/gold/Norris_Helmet_mat_BaseColor.webp
+    275282  lando.itsoffbrand.io/gl/textures/helmet/webp/google/Norris_Helmet_mat_BaseColor.webp
+    387608  lando.itsoffbrand.io/gl/textures/helmet/webp/grid/Norris_Helmet_mat_BaseColor.webp
+    239032  lando.itsoffbrand.io/gl/textures/helmet/webp/lime/Norris_Helmet_mat_BaseColor.webp
+     84350  lando.itsoffbrand.io/gl/textures/noise/noise-03.webp
+      5790  lando.itsoffbrand.io/gl/textures/not-found/not-found-alpha-6.webp
+      5790  lando.itsoffbrand.io/gl/textures/not-found/webp/not-found-alpha-6.webp
+     65794  lando.itsoffbrand.io/gl/textures/plastic/plastic__matcap-02.webp
+     54010  lando.itsoffbrand.io/gl/textures/tracks/lando__matcap-02.webp
+      5508  lando.itsoffbrand.io/rive/page-transition.riv
+
+=== urls inside lando-by-OFF+BRAND.js
+http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation
+https://assets.itsoffbrand.io/lando/gl
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://feross.org
+https://gsap.com
+https://gsap.com/docs/v3/Plugins/GSDevTools?source=GSDevTools
+https://gsap.com/standard-license
+https://gsap.com/standard-license.
+https://player.vimeo.com/api/player.js
+https://player.vimeo.com/video/$
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/fonts/Brier-Bold-02.webp"
+"/fonts/Brier-Bold-msdf.json"
+"/fonts/MonaSans-Bold-02.webp"
+"/fonts/MonaSans-Bold-msdf.json"
+"/hdri/studio_small_08_1k--dark.hdr"
+"/hdri/studio_small_08_1k--faded.hdr"
+"/hdri/studio_small_08_1k--light.hdr"
+"/models/disco-02.glb"
+"/models/helmet-21.glb"
+"/models/tracks/tracks.glb"
+"/rive.wasm"
+"/rive_fallback.wasm"
+"/textures/glass/webp/Norris_Glass_mat_BaseColor.webp"
+"/textures/glass/webp/Norris_Glass_mat_Metallic.webp"
+"/textures/glass/webp/Norris_Glass_mat_Normal.webp"
+"/textures/glass/webp/Norris_Glass_mat_Roughness.webp"
+"/textures/head/webp/alpha.webp"
+"/textures/head/webp/depth.webp"
+"/textures/head/webp/diffuse.webp"
+"/textures/head/webp/normal.webp"
+"/textures/head/webp/roughness.webp"
+"/textures/head/webp/shadow-softer-edit.webp"
+"/textures/head/webp/shadow-to-zip-edit.webp"
+"/textures/head/webp/shadow.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Normal.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp"
+"/textures/helmet/webp/dark/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/disco/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/disco/disco_lens-flare-15.webp"
+"/textures/helmet/webp/disco/disco_mask-01.webp"
+"/textures/helmet/webp/disco/disco_matcap-01.webp"
+"/textures/helmet/webp/grid/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/lime/Norris_Helmet_mat_BaseColor.webp"
+"/textures/noise/noise-03.webp"
+"/textures/not-found/not-found-alpha-6.webp"
+"/textures/plastic/plastic__matcap-02.webp"
+"/textures/tracks/lando__matcap-02.webp"
+"btn-ui.riv"
+"canvas_advanced.wasm"
+"circuits.riv"
+"draco_decoder.wasm"
+"ln4.riv"
+"mob-landscape.riv"
+"page-transition.riv"
+"phrases.riv"
+"reef.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+"signature.riv"
+-- boot signals:
+    169 landoGL
+     31 window.lenis
+      2 dispatchEvent(new CustomEvent("observe"
+      2 allriveloaded
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+      1 dispatchEvent(new CustomEvent("disco"
+
+=== urls inside transitions-rive-isolate.js
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/rive.wasm"
+"/rive_fallback.wasm"
+"canvas_advanced.wasm"
+"page-transition.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+-- boot signals:
+
+=== urls inside main.06.js
+https://itsoffbrand.com
+-- relative asset paths:
+-- boot signals:
+
+=== urls inside main.10.js
+https://itsoffbrand.com
+-- relative asset paths:
+-- boot signals:
+
+=== urls inside webgl.02.js
+-- relative asset paths:
+-- boot signals:
+     19 landoGL
+      2 dispatchEvent(new CustomEvent("observe"
+      1 window.lenis
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+
+=== urls inside lando-offbrand.751e0867.148dc658e77a3916.js
+-- relative asset paths:
+-- boot signals:
+
+=== urls inside lando-offbrand.schunk.7321a5097fb66f41.js
+https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-icon-d2.89e12c322e.svg
+https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-text-d2.c82cec3b78.svg
+https://editor-api.webflow.com
+https://editor-api.webflow.com/api/editor/view
+https://webflow.com/external/designer/
+https://webflow.com/site/third-party-cookie-check.html
+https://webflow.com?utm_campaign=brandjs
+-- relative asset paths:
+-- boot signals:
+
+=== urls inside jquery-3.5.1.min.dc5e7f18c8.js
+-- relative asset paths:
+-- boot signals:
+
+=== urls inside lando-by-OFF+BRAND.01.js
+http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://feross.org
+https://gsap.com
+https://gsap.com/docs/v3/Plugins/GSDevTools?source=GSDevTools
+https://gsap.com/standard-license
+https://gsap.com/standard-license.
+https://lando.itsoffbrand.io/gl
+https://lando.itsoffbrand.io/rive/
+https://player.vimeo.com/api/player.js
+https://player.vimeo.com/video/$
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/fonts/Brier-Bold-02.webp"
+"/fonts/Brier-Bold-msdf.json"
+"/fonts/MonaSans-Bold-02.webp"
+"/fonts/MonaSans-Bold-msdf.json"
+"/hdri/studio_small_08_1k--dark.hdr"
+"/hdri/studio_small_08_1k--faded.hdr"
+"/hdri/studio_small_08_1k--light.hdr"
+"/models/disco-02.glb"
+"/models/helmet-21.glb"
+"/models/tracks/tracks.glb"
+"/rive.wasm"
+"/rive_fallback.wasm"
+"/textures/glass/webp/Norris_Glass_mat_BaseColor.webp"
+"/textures/glass/webp/Norris_Glass_mat_Metallic.webp"
+"/textures/glass/webp/Norris_Glass_mat_Normal.webp"
+"/textures/glass/webp/Norris_Glass_mat_Roughness.webp"
+"/textures/head/webp/alpha.webp"
+"/textures/head/webp/depth.webp"
+"/textures/head/webp/diffuse.webp"
+"/textures/head/webp/normal.webp"
+"/textures/head/webp/roughness.webp"
+"/textures/head/webp/shadow-softer-edit.webp"
+"/textures/head/webp/shadow-to-zip-edit.webp"
+"/textures/head/webp/shadow.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Normal.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp"
+"/textures/helmet/webp/dark/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/disco/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/disco/disco_lens-flare-15.webp"
+"/textures/helmet/webp/disco/disco_mask-01.webp"
+"/textures/helmet/webp/disco/disco_matcap-01.webp"
+"/textures/helmet/webp/grid/Norris_Helmet_mat_BaseColor.webp"
+"/textures/helmet/webp/lime/Norris_Helmet_mat_BaseColor.webp"
+"/textures/noise/noise-03.webp"
+"/textures/not-found/not-found-alpha-6.webp"
+"/textures/plastic/plastic__matcap-02.webp"
+"/textures/tracks/lando__matcap-02.webp"
+"btn-ui.riv"
+"canvas_advanced.wasm"
+"circuits.riv"
+"draco_decoder.wasm"
+"ln4.riv"
+"mob-landscape.riv"
+"page-transition.riv"
+"phrases.riv"
+"reef.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+"signature.riv"
+-- boot signals:
+    169 landoGL
+     31 window.lenis
+      2 dispatchEvent(new CustomEvent("observe"
+      2 allriveloaded
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+      1 dispatchEvent(new CustomEvent("disco"
+
+=== urls inside lando.OFF+BRAND.gold-android-fix-03.js
+http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://feross.org
+https://gsap.com
+https://gsap.com/standard-license
+https://gsap.com/standard-license.
+https://lando.itsoffbrand.io/gl
+https://lando.itsoffbrand.io/rive/
+https://player.vimeo.com/api/player.js
+https://player.vimeo.com/video/$
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/fonts/Brier-Bold-02.webp"
+"/fonts/Brier-Bold-msdf.json"
+"/fonts/MonaSans-Bold-02.webp"
+"/fonts/MonaSans-Bold-msdf.json"
+"/hdri/studio_small_08_1k--dark.hdr"
+"/hdri/studio_small_08_1k--faded.hdr"
+"/hdri/studio_small_08_1k--light.hdr"
+"/models/disco-02.glb"
+"/models/helmet-21.glb"
+"/models/sotd.glb"
+"/models/tracks/tracks-05.glb"
+"/rive.wasm"
+"/rive_fallback.wasm"
+"/textures/glass/webp/Norris_Glass_mat_Normal.webp"
+"/textures/head/webp/normal.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Normal.webp"
+"/textures/helmet/webp/disco/disco_lens-flare-15.webp"
+"/textures/helmet/webp/disco/disco_matcap-01.webp"
+"/textures/noise/noise-03.webp"
+"/textures/not-found/webp/not-found-alpha-6.webp"
+"/textures/plastic/plastic__matcap-02.webp"
+"/textures/tracks/lando__matcap-02.webp"
+"basis_transcoder.wasm"
+"btn-ui.riv"
+"canvas_advanced.wasm"
+"circuits.riv"
+"draco_decoder.wasm"
+"ln4.riv"
+"mob-landscape.riv"
+"page-transition.riv"
+"phrases.riv"
+"reef.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+"signature.riv"
+-- boot signals:
+    171 landoGL
+     31 window.lenis
+      2 dispatchEvent(new CustomEvent("observe"
+      2 allriveloaded
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+      1 dispatchEvent(new CustomEvent("disco"
+
+=== urls inside lando.OFF+BRAND.gold.js
+http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://feross.org
+https://gsap.com
+https://gsap.com/standard-license
+https://gsap.com/standard-license.
+https://lando.itsoffbrand.io/gl
+https://lando.itsoffbrand.io/rive/
+https://player.vimeo.com/api/player.js
+https://player.vimeo.com/video/$
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/fonts/Brier-Bold-02.webp"
+"/fonts/Brier-Bold-msdf.json"
+"/fonts/MonaSans-Bold-02.webp"
+"/fonts/MonaSans-Bold-msdf.json"
+"/hdri/studio_small_08_1k--dark.hdr"
+"/hdri/studio_small_08_1k--faded.hdr"
+"/hdri/studio_small_08_1k--light.hdr"
+"/models/disco-02.glb"
+"/models/helmet-21.glb"
+"/models/sotd.glb"
+"/models/tracks/tracks-05.glb"
+"/rive.wasm"
+"/rive_fallback.wasm"
+"/textures/glass/webp/Norris_Glass_mat_Normal.webp"
+"/textures/head/webp/normal.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Normal.webp"
+"/textures/helmet/webp/disco/disco_lens-flare-15.webp"
+"/textures/helmet/webp/disco/disco_matcap-01.webp"
+"/textures/noise/noise-03.webp"
+"/textures/not-found/webp/not-found-alpha-6.webp"
+"/textures/plastic/plastic__matcap-02.webp"
+"/textures/tracks/lando__matcap-02.webp"
+"basis_transcoder.wasm"
+"btn-ui.riv"
+"canvas_advanced.wasm"
+"circuits.riv"
+"draco_decoder.wasm"
+"ln4.riv"
+"mob-landscape.riv"
+"page-transition.riv"
+"phrases.riv"
+"reef.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+"signature.riv"
+-- boot signals:
+    171 landoGL
+     31 window.lenis
+      2 dispatchEvent(new CustomEvent("observe"
+      2 allriveloaded
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+      1 dispatchEvent(new CustomEvent("disco"
+
+=== urls inside lando.OFF+BRAND.js
+http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation
+https://assets.itsoffbrand.io/lando/rive/
+https://cdn.jsdelivr.net/npm/
+https://feross.org
+https://gsap.com
+https://gsap.com/standard-license
+https://gsap.com/standard-license.
+https://lando.itsoffbrand.io/gl
+https://lando.itsoffbrand.io/rive/
+https://player.vimeo.com/api/player.js
+https://player.vimeo.com/video/$
+https://rive.app
+https://rive.app)
+https://unpkg.com/
+-- relative asset paths:
+"/fonts/Brier-Bold-02.webp"
+"/fonts/Brier-Bold-msdf.json"
+"/fonts/MonaSans-Bold-02.webp"
+"/fonts/MonaSans-Bold-msdf.json"
+"/hdri/studio_small_08_1k--dark.hdr"
+"/hdri/studio_small_08_1k--faded.hdr"
+"/hdri/studio_small_08_1k--light.hdr"
+"/models/disco-02.glb"
+"/models/helmet-21.glb"
+"/models/tracks/tracks-05.glb"
+"/rive.wasm"
+"/rive_fallback.wasm"
+"/textures/glass/webp/Norris_Glass_mat_Normal.webp"
+"/textures/head/webp/normal.webp"
+"/textures/helmet/webp/Norris_Helmet_mat_Normal.webp"
+"/textures/helmet/webp/disco/disco_lens-flare-15.webp"
+"/textures/helmet/webp/disco/disco_matcap-01.webp"
+"/textures/noise/noise-03.webp"
+"/textures/not-found/webp/not-found-alpha-6.webp"
+"/textures/plastic/plastic__matcap-02.webp"
+"/textures/tracks/lando__matcap-02.webp"
+"basis_transcoder.wasm"
+"btn-ui.riv"
+"canvas_advanced.wasm"
+"circuits.riv"
+"draco_decoder.wasm"
+"ln4.riv"
+"mob-landscape.riv"
+"page-transition.riv"
+"phrases.riv"
+"reef.riv"
+"rive.wasm"
+"rive_fallback.wasm"
+"signature.riv"
+-- boot signals:
+    171 landoGL
+     31 window.lenis
+      2 dispatchEvent(new CustomEvent("observe"
+      2 allriveloaded
+      1 dispatchEvent(new CustomEvent("scrollend"
+      1 dispatchEvent(new CustomEvent("register"
+      1 dispatchEvent(new CustomEvent("disco"
+
+=== urls inside draco_wasm_wrapper.js
+-- relative asset paths:
+"draco_decoder.wasm"
+-- boot signals:
+
+=== rive files
+      5508  lando.itsoffbrand.io/rive/page-transition.riv
+     30851  assets.itsoffbrand.io/lando/rive/signature.riv
+     52818  assets.itsoffbrand.io/lando/rive/mob-landscape.riv
+     36636  assets.itsoffbrand.io/lando/rive/circuits.riv
+      4144  assets.itsoffbrand.io/lando/rive/btn-ui.riv
+     72667  assets.itsoffbrand.io/lando/rive/reef.riv
+      3770  assets.itsoffbrand.io/lando/rive/ln4.riv
+     68650  assets.itsoffbrand.io/lando/rive/phrases.riv
+
+=== gl files
+    285747  lando.itsoffbrand.io/gl/draco/draco_decoder.wasm
+     58763  lando.itsoffbrand.io/gl/draco/draco_wasm_wrapper.js
+    386788  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--light.hdr
+    175712  lando.itsoffbrand.io/gl/hdri/studio_small_08_1k--faded.hdr
+     24838  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-02.webp
+     89744  lando.itsoffbrand.io/gl/fonts/Brier-Bold-msdf.json
+      5164  lando.itsoffbrand.io/gl/fonts/MonaSans-Bold-msdf.json
+    116588  lando.itsoffbrand.io/gl/fonts/Brier-Bold-02.webp
+    150168  lando.itsoffbrand.io/gl/textures/head/webp/normal.webp
+     38874  lando.itsoffbrand.io/gl/textures/head/webp/alpha.webp
+    292106  lando.itsoffbrand.io/gl/textures/head/webp/diffuse.webp
+    285764  lando.itsoffbrand.io/gl/textures/head/webp/shadow-softer-edit.webp
+    283478  lando.itsoffbrand.io/gl/textures/head/webp/shadow.webp
+      3708  lando.itsoffbrand.io/gl/textures/head/webp/depth.webp
+     65794  lando.itsoffbrand.io/gl/textures/plastic/plastic__matcap-02.webp
+      5790  lando.itsoffbrand.io/gl/textures/not-found/not-found-alpha-6.webp
+      5790  lando.itsoffbrand.io/gl/textures/not-found/webp/not-found-alpha-6.webp
+     84350  lando.itsoffbrand.io/gl/textures/noise/noise-03.webp
+      8320  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Normal.webp
+     44358  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_BaseColor.webp
+     21898  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Roughness.webp
+     14748  lando.itsoffbrand.io/gl/textures/glass/webp/Norris_Glass_mat_Metallic.webp
+    321508  lando.itsoffbrand.io/gl/textures/helmet/webp/gold/Norris_Helmet_mat_BaseColor.webp
+    239032  lando.itsoffbrand.io/gl/textures/helmet/webp/lime/Norris_Helmet_mat_BaseColor.webp
+    387608  lando.itsoffbrand.io/gl/textures/helmet/webp/grid/Norris_Helmet_mat_BaseColor.webp
+    231018  lando.itsoffbrand.io/gl/textures/helmet/webp/dark/Norris_Helmet_mat_BaseColor.webp
+     64804  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Normal.webp
+     64602  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_matcap-01.webp
+    177136  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/Norris_Helmet_mat_BaseColor.webp
+     74998  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_mask-01.webp
+    100940  lando.itsoffbrand.io/gl/textures/helmet/webp/disco/disco_lens-flare-15.webp
+    275282  lando.itsoffbrand.io/gl/textures/helmet/webp/google/Norris_Helmet_mat_BaseColor.webp
+     25482  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Roughness.webp
+     20486  lando.itsoffbrand.io/gl/textures/helmet/webp/Norris_Helmet_mat_Metallic.webp
+     54010  lando.itsoffbrand.io/gl/textures/tracks/lando__matcap-02.webp
+    139492  lando.itsoffbrand.io/gl/models/helmet-21.glb
+    358984  lando.itsoffbrand.io/gl/models/disco-02.glb
+    463904  lando.itsoffbrand.io/gl/models/tracks/tracks.glb
+    463920  lando.itsoffbrand.io/gl/models/tracks/tracks-05.glb
+
+=== css
+    186727  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/css/lando-offbrand.shared.4f53262f0.css
+    188318  cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/css/lando-offbrand.shared.5b4e934f7.css
