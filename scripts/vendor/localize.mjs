@@ -189,6 +189,12 @@ export async function collectVendor() {
       if (base.endsWith('.wasm') && !files.some((f) => f.path === `${NPM_DIST}/${base}`)) {
         files.push({ path: `${NPM_DIST}/${base}`, body });
       }
+      // three.js ships under an unversioned alias too, so the hero's import
+      // specifier does not have to change every time it is re-vendored. Both
+      // files must sit together: three.module.js imports './three.core.js'.
+      if (rel.startsWith('three@') && base.endsWith('.js')) {
+        files.push({ path: `${NPM_DIST}/three/${base}`, body });
+      }
     }
   }
 

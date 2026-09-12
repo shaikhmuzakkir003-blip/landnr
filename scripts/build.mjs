@@ -79,6 +79,19 @@ async function main() {
   /* 4 — assets -------------------------------------------------------- */
   const assets = await collectAssets(join(SRC, 'css'), join(SRC, 'js'));
 
+  /* 4b — the hero portrait -------------------------------------------- *
+   * Drop any flat-background picture at source/ash-hero.png (or .webp /
+   * .jpg) and it ships verbatim; src/js/hero-ash.js keys the backdrop out
+   * in the browser. With nothing there the hero draws its own stand-in. */
+  const portraits = [];
+  for (const name of ['ash-hero.png', 'ash-hero.webp', 'ash-hero.jpg', 'ash-hero.jpeg']) {
+    const at = join(ROOT, 'source', name);
+    if (existsSync(at)) portraits.push({ path: join('assets', 'img', name), body: await readFile(at), binary: true });
+  }
+  log('  portrait ', portraits.length
+    ? `${portraits.map((f) => f.path).join(', ')} (${(portraits[0].body.length / 1024).toFixed(0)} kB)`
+    : 'none dropped in — the hero draws its stand-in');
+
   /* 5 — checks -------------------------------------------------------- */
   const problems = runChecks({ home, subs, assets, vendor, engineSrc });
 
@@ -90,6 +103,7 @@ async function main() {
       body: html,
     })),
     ...assets.map((a) => ({ path: join('assets', a.rel), body: a.body, binary: a.binary })),
+    ...portraits,
     ...vendor.files,
     ...deployConfig(),
   ];
