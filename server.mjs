@@ -148,7 +148,26 @@ function resolveFile(pathname) {
   return null;
 }
 
+/**
+ * The vendored engine probes both Rive mirrors for every artboard, so a normal
+ * page load produces a handful of deliberate 404s. Those are asset requests,
+ * not navigations: answer them with a small text body instead of the 100 kB
+ * HTML 404 page, so loaders never see markup and the log stays readable.
+ */
+function isAssetRequest(req, pathname) {
+  if (pathname.startsWith('/assets/')) return true;
+  const ext = extname(pathname).toLowerCase();
+  if (ext && ext !== '.html' && MIME[ext]) return true;
+  return !String(req.headers.accept || '').includes('text/html');
+}
+
 async function notFound(req, res, pathname, started) {
+  if (isAssetRequest(req, pathname)) {
+    const body = Buffer.from(`404 — ${decodeURIComponent(pathname)}\n`);
+    send(res, 404, 'text/plain; charset=utf-8', body);
+    logLine(req, pathname, 404, body.length, Date.now() - started);
+    return;
+  }
   const fallback = join(DIST, '404.html');
   if (existsSync(fallback)) {
     const body = await readFile(fallback);
