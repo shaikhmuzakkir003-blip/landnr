@@ -45,6 +45,7 @@ import {
   walkNodes,
 } from './html.mjs';
 import { DISABLE_LANDO_GL } from '../vendor/localize.mjs';
+import { applyContent } from './content-ash.mjs';
 
 export const SITE_ORIGIN = 'https://landonorris.com';
 
@@ -460,6 +461,8 @@ export function buildHome(sourceHtml, opts = {}) {
     engineSrc,
     localWebflow: opts.localWebflow || null,
   });
+  /* the words: a racing driver's site becomes a programmer's, same layout */
+  report.content = applyContent(root, { walkNodes, isElement, getAttr, setAttr });
   injectAssets(root, { ...opts, realEngine: Boolean(engineSrc) });
   return { root, html: serialize(root), report };
 }

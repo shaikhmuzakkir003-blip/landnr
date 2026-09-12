@@ -71,6 +71,9 @@ async function main() {
   const stamp = `built ${new Date().toISOString()} · landnr · homepage capture: Last Published Tue Aug 11 2026`;
   const home = buildHome(sourceHtml, { buildStamp: stamp, engineSrc, localWebflow });
   log('  repairs  ', JSON.stringify(home.report.repairs));
+  const content = home.report.content || {};
+  log('  content  ', `${content.swapped ?? 0} strings swapped`
+    + (content.missed?.length ? ` · ${content.missed.length} MISSED: ${content.missed.join(' | ')}` : ''));
   log('  removed  ', `${home.report.scriptsRemoved || 0} scripts, ${home.report.commentsRemoved || 0} comments, ${home.report.embedsRemoved || 0} empty embeds`);
 
   /* 3 — derived pages ------------------------------------------------- */
