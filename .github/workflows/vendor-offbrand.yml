@@ -15,8 +15,10 @@
 # them into vendor/ and commits them, which is what lets the rebuilt site run
 # the *real* engine instead of a frozen page.
 #
-# It is safe to re-run: `npm run vendor:status` prints what is present, and the
-# workflow only commits when a file is new or changed.
+# Safe to re-run: files already in vendor/ are kept, and the job commits only
+# when something is new or changed. Every run also commits its own log, so a
+# failure is readable from the repository (Actions logs are not always
+# reachable from a sandbox).
 
 name: vendor-offbrand-assets
 
@@ -24,7 +26,9 @@ on:
   workflow_dispatch:
   push:
     branches: [arena/01a093d0-landnr]
-    paths: ['.github/workflows/vendor-offbrand.yml']
+    paths:
+      - '.github/workflows/vendor-offbrand.yml'
+      - 'scripts/vendor/**'
 
 permissions:
   contents: write
@@ -36,20 +40,34 @@ concurrency:
 jobs:
   harvest:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
           ref: arena/01a093d0-landnr
           fetch-depth: 1
 
+      - name: Network sanity
+        run: |
+          for u in https://web.archive.org/ https://assets.itsoffbrand.io/lando/rive/reef.riv https://cdn.prod.website-files.com/ ; do
+            printf '%s -> ' "$u"
+            curl -sS -o /dev/null -w '%{http_code}\n' --max-time 25 "$u" || echo "curl failed"
+          done
+
       - name: Download the engine and every asset it fetches
-        run: bash scripts/vendor/fetch.sh
+        run: |
+          mkdir -p vendor
+          bash -x scripts/vendor/fetch.sh > vendor/fetch-log.txt 2>&1
+          echo "exit=$?" >> vendor/fetch-log.txt
+          tail -n 40 vendor/fetch-log.txt
 
       - name: Report what the engine asks for
-        run: bash scripts/vendor/inspect.sh
+        run: |
+          bash scripts/vendor/inspect.sh > vendor/inspect-log.txt 2>&1 || echo "inspect failed" >> vendor/inspect-log.txt
+          tail -n 120 vendor/inspect-log.txt
 
       - name: Commit
+        if: always()
         run: |
           git config user.name  "arena-ai-coding-agent[bot]"
           git config user.email "arena-ai-coding-agent[bot]@users.noreply.github.com"

@@ -8,7 +8,7 @@
 # Nothing here is required to succeed: whatever arrives is written to
 # vendor/offbrand/<host>/<path> and listed in vendor/manifest.json.
 
-set -uo pipefail
+set -u   # no -e, no pipefail: a missing file must never abort the harvest
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUT="$ROOT/vendor/offbrand"
@@ -132,6 +132,9 @@ echo "== manifest"
 
 echo
 echo "   fetched: $ok   missing: $missed"
-echo "   bytes:   $(du -sh "$OUT" | cut -f1)"
-find "$OUT" -type f | sed "s|$OUT/||" | sort | head -80
-echo "(full list in vendor/manifest.json)"
+echo "   bytes:   $(du -sh "$OUT" 2>/dev/null | cut -f1)"
+find "$OUT" -type f > /tmp/vendor-list.txt 2>/dev/null || true
+sed "s|$OUT/||" /tmp/vendor-list.txt | sort > "$ROOT/vendor/file-list.txt" || true
+head -n 80 "$ROOT/vendor/file-list.txt" || true
+echo "(full list in vendor/file-list.txt and vendor/manifest.json)"
+exit 0
