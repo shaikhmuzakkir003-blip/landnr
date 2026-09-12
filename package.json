@@ -14,7 +14,10 @@
     "preview": "node scripts/build.mjs && node server.mjs",
     "check": "node scripts/build.mjs --check",
     "smoke": "node scripts/build.mjs && node scripts/dev/smoke-all.mjs",
-    "smoke:one": "node scripts/dev/smoke.mjs"
+    "smoke:one": "node scripts/dev/smoke.mjs",
+    "verify": "node scripts/build.mjs --quiet && node scripts/dev/verify-engine.mjs",
+    "vendor": "bash scripts/vendor/fetch.sh",
+    "vendor:status": "bash scripts/vendor/inspect.sh"
   },
   "dependencies": {},
   "devDependencies": {}

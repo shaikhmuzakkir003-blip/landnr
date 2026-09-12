@@ -52,15 +52,20 @@ const html = await readFile(resolve(ROOT, 'dist/index.html'), 'utf8');
 const dom = createDOM(html, options);
 const { window } = dom;
 
-// In the browser the restored OFF+BRAND bundle is a defer script, so it has
+// In the browser the vendored OFF+BRAND bundle is a defer script, so it has
 // already reported success or failure by the time the engine module runs.
+// `loaded` alone must NOT stop the local engine any more: that is exactly how
+// the page used to end up frozen (the bundle loads, then its boot chain throws
+// on a refused request and Lenis is never constructed). So the harness models
+// both halves — the marker, and the globals the real bundle leaves behind.
 let remoteReady = 0;
 if (remoteMode) {
   window.__lnRemote = { loaded: 1 };
   window.addEventListener('ln:ready', () => { remoteReady += 1; });
   if (happy) {
-    // simulate the bundle actually coming up: Lenis exists and its page
-    // transition has consumed the overlay
+    // the bundle evaluated (landoGL) and finished booting (lenis), and its
+    // page transition has consumed the overlay
+    window.landoGL = { reveal: 1 };
     window.lenis = { scroll: () => {} };
     const w = window.document.querySelector('.transition-w');
     if (w && w.parentNode) w.parentNode.removeChild(w);
@@ -87,25 +92,28 @@ if (!report) problems.push('window.landnr was never exposed — engine.js did no
 
 if (remoteMode) {
   const root = dom.document.documentElement;
-  check('remote: ln-remote set', root.classList.contains('ln-remote'), true);
+  check('remote: ln-remote set while we wait', root.classList.contains('ln-remote'), true);
   check('remote: ln-js removed, our CSS stands down', root.classList.contains('ln-js'), false);
   check('remote: our split-text did not run', report.counts.splitText ?? 0, 0);
   check('remote: our preloader did not run', report.counts.preloaderDone ?? 0, 0);
   check('remote: original rive canvases intact', dom.count('canvas[data-rive-object]'), (n) => n > 10);
   check('remote: original split-text markup intact', dom.count('[split-text]'), (n) => n > 60);
   if (happy) {
-    await new Promise((r) => setTimeout(r, 600)); // one real-time watchdog tick
-    check('remote-happy: watchdog confirmed the page visible', remoteReady, 1);
-    check('remote-happy: remote engine alive', report.remote.alive, true);
+    await new Promise((r) => setTimeout(r, 1200)); // poll + overlay watch ticks
+    check('remote-happy: hand-over confirmed the page visible', remoteReady, 1);
+    check('remote-happy: real engine is driving', report.remote.alive, true);
+    check('remote-happy: ln-remote-live set', root.classList.contains('ln-remote-live'), true);
+    check('remote-happy: boot time recorded', report.remote.bootMs, (n) => typeof n === 'number');
     check('remote-happy: failsafe not applied', root.classList.contains('ln-failsafe'), false);
   } else {
     check('remote: failsafe stays armed until the page proves visible', remoteReady, 0);
+    check('remote: not driving yet — window.lenis absent', report.remote.alive, undefined);
   }
   check('remote: api exposed', typeof window.landnr.report, 'object');
 
-  // Advance the clock past both deadlines (12s rescue, 16s forced reveal).
-  // The shim drives performance.now() from frames() but setInterval is the
-  // real timer, so the watchdog then gets real time to tick.
+  // Advance the clock past the "did it even evaluate" deadline (4s). The shim
+  // drives performance.now() from frames() but setInterval is the real timer,
+  // so the poll then gets real time to tick.
   dom.frames(900, 20); // ~18s of clock
   await new Promise((r) => setTimeout(r, 500));
   dom.frames(12);
@@ -113,11 +121,11 @@ if (remoteMode) {
 
   if (happy) {
     check('remote-happy: no rescue — their engine keeps the page', report.remote.rescued, undefined);
-    check('remote-happy: no forced reveal needed', report.remote.forcedReveal, undefined);
     check('remote-happy: local engine stayed out', report.counts.splitText ?? 0, 0);
     check('remote-happy: ln-js still removed', dom.document.documentElement.classList.contains('ln-js'), false);
   } else {
-    check('remote: watchdog took over', report.remote.rescued, true);
+    check('remote: local engine took over', report.remote.rescued, true);
+    check('remote: reason recorded', report.remote.reason, 'loaded but never evaluated');
     check('remote: ln-js restored after rescue', dom.document.documentElement.classList.contains('ln-js'), true);
     check('remote: local engine then split the text', dom.count('.line'), (n) => n > 30);
     // the rescued preloader enters on real-time timers — HARD_ENTER_MS (8s)
@@ -129,7 +137,7 @@ if (remoteMode) {
     check('remote: ln:ready fired after the rescue', remoteReady >= 1, true);
   }
 
-  console.log(`\nsmoke · remote hand-over + watchdog rescue in ${Date.now() - startedAt}ms`);
+  console.log(`\nsmoke · remote hand-over + takeover in ${Date.now() - startedAt}ms`);
   console.log(`   clock at rescue        ${Math.round(window.performance.now())}ms`);
   console.log(`   split .line            ${dom.count('.line')}   (after the rescue)`);
   console.log(`   split .char            ${dom.count('.char')}`);

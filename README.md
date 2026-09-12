@@ -6,19 +6,32 @@ capture of the live site (`source/landonorris-home.html`, captured
 
 The capture is a Webflow export whose behaviour lives in OFF+BRAND's engine
 bundle. That bundle is served from `lando.itsoffbrand.io`, which answers
-`Access denied - Invalid referrer` to any origin that is not
-landonorris.com — so a local copy of the page loads as a frozen, invisible
-document. This repository keeps **100 % of the original markup, classes and
-inline CSS embeds** and replaces only the parts that cannot run: the engine,
-the Rive art and the WebGL wash.
+`Access denied - Invalid referrer` to any origin that is not landonorris.com —
+which is why an earlier version of this build showed a page with **no
+animation at all**. `vendor/` now holds a byte-exact mirror of that engine and
+of every file it fetches (Rive artboards, the page transition, the WebGL hero's
+models, textures in both the desktop and mobile sets, HDRIs, the Draco and
+Basis decoders, the Rive WASM), and the build rewires the bundle's five remote
+URL literals to it. The genuine engine therefore runs from this origin: real
+Lenis, real GSAP ScrollTrigger choreography, real Rive art, real WebGL helmet.
+
+This repository keeps **100 % of the original markup, classes and inline CSS
+embeds**. `src/js` remains as the fallback engine for the pages the capture
+never contained, and for the case where the bundle cannot run at all.
 
 ```bash
 npm run dev        # build + serve with watch  →  http://localhost:4173
-npm run build      # source/ + src/  →  dist/
-npm run smoke      # boot the real engine against the real build, 8 scenarios
+npm run build      # source/ + src/ + vendor/  →  dist/
+npm run verify     # every asset the engine asks for, requested over HTTP
+npm run smoke      # boot the engine against the real build, 9 scenarios
+npm run vendor     # re-harvest vendor/ (also runs as a GitHub workflow)
 ```
 
 No `npm install` is needed — there are no dependencies. Node ≥ 20.11.
+
+Open the page with **`/?engine`** for a live readout of which engine is
+driving, how many Rive canvases are live, whether Lenis owns the scroll, and
+anything the network refused.
 
 ---
 
@@ -69,12 +82,14 @@ Two things to know before you deploy:
 * **Absolute paths.** Assets are referenced as `/assets/…`, so the site must
   sit at a domain root — which is what Netlify gives you. Deploying into a
   subdirectory of some other host would need those rewritten.
-* **The real engine depends on a third-party host.** `assets.itsoffbrand.io`
-  has no referrer lock today, so the genuine OFF+BRAND bundle and its Rive art
-  load on your Netlify domain. If that host ever changes its mind, the request
-  fails, `src/js/engine.js` boots the local engine instead, and the page still
-  works — you lose the Rive art, not the site. `npm run build -- --local`
-  ships the local engine only, with no third-party script at all.
+* **The real engine is part of the deploy.** It is vendored into
+  `dist/assets/vendor/` (≈18 MB: the bundle, seven Rive artboards, the page
+  transition, the WebGL hero's models/textures/HDRIs and the Rive WASM), so a
+  deploy needs no third-party host for anything that animates — only the
+  Webflow CDN for photography and fonts. If the bundle is ever missing or
+  refused, `src/js/engine.js` detects that it never took the scroll and boots
+  the local engine instead: you lose the Rive art, not the site.
+  `npm run build -- --local` ships the local engine only.
 
 ## How the build works
 
@@ -87,19 +102,27 @@ source/landonorris-home.html   (326 kB saved page, 32 unclosed <svg>)
         │                               (keeps authored "\n" in pre-line text)
         │
         ├─ scripts/lib/transform.mjs  strips what cannot run, injects what can
-        │                             · removes GTM/gtag, Klaviyo, iubenda,
-        │                               the referrer-locked OFF+BRAND build
-        │                               and dev-only scripts
-        │                             · restores the two builds that sit on
-        │                               the referrer-open assets host — the
-        │                               app bundle and the Rive transition —
-        │                               plus the jQuery/Webflow runtime they
-        │                               call into
-        │                             · injects engine.css, the ln-js boot
-        │                               flag, <noscript> fallback, failsafe
-        │                               and the engine module tag
+        │                             · removes GTM/gtag, Klaviyo, iubenda and
+        │                               the dev-only scripts
+        │                             · replaces the referrer-locked engine tag
+        │                               with the vendored copy, in the same
+        │                               place in <head>, with the same load
+        │                               markers
+        │                             · re-points jQuery, the Webflow runtime
+        │                               and the published stylesheet at the
+        │                               mirror (integrity attributes dropped —
+        │                               they are the same bytes, served here)
+        │                             · injects engine.css, the boot flag,
+        │                               <noscript> fallback, failsafe and the
+        │                               engine module tag
         │                             · derives the six stand-in routes by
         │                               deep-cloning the cleaned homepage
+        │
+        ├─ scripts/vendor/localize.mjs  vendor/ → dist/assets/vendor/
+        │                             · rewrites the bundle's URL literals
+        │                               (two Rive bases, the WebGL base, the
+        │                               unpkg + jsdelivr WASM addresses)
+        │                             · mirrors the gl/, rive/, css/, js/ trees
         │
         └─ scripts/build.mjs          assets + checks → dist/
 ```
@@ -122,61 +145,100 @@ Rive stand-ins, menu, stub pages, reduced-motion — and every rule that touches
 original markup is prefixed `html.ln-js`, so the whole stylesheet switches
 itself off the moment the genuine engine takes the wheel.
 
-## Two engines
+## Why the page had no animation
 
-Whoever saved the capture left a ladder of alternative builds in HTML comments:
+Worth stating precisely, because the fix is only as good as the diagnosis.
 
-```html
-<!-- Production (No Gold
-<script defer src="https://lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.js"></script>
--->
-<!-- Gold -->
-<script defer src="https://lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js"></script>
-<!--
-<script defer src="https://assets.itsoffbrand.io/lando/dev-js/lando-by-OFF+BRAND.js"></script>
--->
+The capture's `<head>` loads the engine from
+`lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js`. That host
+answers `Access denied - Invalid referrer` to every origin that is not
+landonorris.com, and a browser cannot spoof a `Referer`. An earlier version of
+this build therefore substituted the mirror of the bundle that lives on
+`assets.itsoffbrand.io` (no referrer lock) and let `src/js/engine.js` stand
+down as soon as that script's `onload` fired.
+
+But the bundle's own boot sequence is a chain of awaits — this is its tail,
+verbatim:
+
+```js
+async function m_(){ return new Promise((A,Q)=>{ window.addEventListener("allriveloaded",()=>{A()}), kI() }) }
+async function c_(){
+  let A = await BL();                            // page-transition.riv  ← REJECTS on a 403
+  await Promise.all([eM(), m_()]);               // WebGL hero + every Rive artboard
+  let [Q,B] = await Promise.all([…GL…, …Lenis…]); // ← Lenis is constructed HERE
+  CD()
+}
+c_();
 ```
 
-The uncommented one — the build the live site actually runs — is on
-`lando.itsoffbrand.io`, which answers `Access denied - Invalid referrer` to any
-origin that is not landonorris.com. A browser will not let you spoof a
-`Referer`, so from a local build that file can only ever be a 403.
+`BL()` loads `https://lando.itsoffbrand.io/rive/page-transition.riv` — the
+referrer-locked host again. So the first `await` rejected, `c_()` threw, and
+**Lenis was never constructed**. No Lenis means no smooth scroll *and* no
+GSAP ScrollTrigger ticks (their `init()` wires `lenis.on("scroll", …)` into
+`ScrollTrigger.update()`), which is why the page did not merely lose its
+preloader: every scroll-triggered reveal, pin, split and parallax on the site
+went with it. Meanwhile `src/js/engine.js` had seen `onload`, concluded the
+real engine owned the page, and switched itself off. A loaded `<script>` tag
+was being treated as a running engine.
 
-The commented-out build on `assets.itsoffbrand.io` has **no** referrer lock, so
-the build restores it — real Lenis, real GSAP, real Rive runtime and the
-`allriveloaded` handshake that fetches every `.riv` file (helmet-reef,
-signature, circuits, arrow, hamburger, off-icons, collabs, phrases) itself.
-Alongside it go `transitions-rive-isolate.js` (the Rive page transition) and
-the jQuery + Webflow runtime the bundle calls `Webflow.destroy()` on. All of
-them carry `referrerpolicy="no-referrer"`, and the document gets
-`<meta name="referrer" content="no-referrer">` so the `.riv` requests travel
-the same way. Sending no referrer is the only lever available; if the host
-still refuses, the request simply fails and the fallback below takes over.
+Two independent bugs, one symptom: a page that renders and never moves.
 
-`src/js/engine.js` picks a mode at boot:
+## What runs now
 
-| | signal | what happens |
-| --- | --- | --- |
-| **remote** | the bundle's `onload` fired | `html.ln-remote`, `ln-js` removed → our CSS stands down, but the inline failsafe **stays armed** until the watchdog sees the preloader overlay actually leave the viewport. No `window.lenis` / `window.landoGL` within 12 s → the local engine boots. Overlay still covering at 16 s (their engine alive but its transition Rive never arrived) → the page is force-revealed over their engine |
-| **local** | `onerror`, or `LANDNR_ENGINE=local` | `html.ln-js` → the thirteen modules below drive everything |
+**1 · The real engine, served from here.** `scripts/vendor/fetch.sh` harvests
+`vendor/` — the live bundle (asked for politely with a `landonorris.com`
+Referer, which a runner may send and a browser may not), all seven Rive
+artboards, `page-transition.riv`, the whole `gl/` tree (models, HDRIs, Draco,
+Basis, MSDF fonts, `webp` for desktop *and* `ktx2` for mobile), the Webflow
+stylesheet and runtime, jQuery, and `@rive-app/canvas-lite@2.26.4`'s WASM from
+npm. `scripts/vendor/localize.mjs` copies it into `dist/assets/vendor/` and
+rewrites the only five remote literals in the bundle:
 
-The bundle is `defer` and the engine is a module, so its load has already
-succeeded or failed by the time we look — the hand-over is synchronous and
-there is no flash of two engines fighting.
+| in the bundle | becomes |
+| --- | --- |
+| `"https://assets.itsoffbrand.io/lando/rive/"` | `/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/` |
+| `"https://lando.itsoffbrand.io/rive/"` | `/assets/vendor/offbrand/lando.itsoffbrand.io/rive/` |
+| `"https://lando.itsoffbrand.io/gl"` | `/assets/vendor/offbrand/lando.itsoffbrand.io/gl` |
+| `unpkg…concat(name,"@",version,"/rive.wasm")` | `/assets/vendor/npm/rive.wasm` |
+| `cdn.jsdelivr.net/npm…rive_fallback.wasm` | `/assets/vendor/npm/rive_fallback.wasm` |
 
-Beneath all of that, an inline script in `<head>` — no stylesheet, no module,
-no third party involved — polls once a second: if a full-screen overlay is
-still covering the viewport after ~10 s it hides it with inline styles and
-reveals `.page-w`. A lime screen with nothing on it is the one failure this
-build refuses to ship, including the case where `engine.css` itself never
-arrives and every class-based failsafe is dead on arrival.
+Not one byte of engine logic is touched. `npm run verify` then derives every
+asset the built bundle can ask for — 68 of them, including both texture sets —
+requests each over HTTP and fails the run on a 404, an empty body or a wrong
+content type (`.wasm` must be `application/wasm`, `.glb` must be
+`model/gltf-binary`, or the loaders fail silently in the browser).
 
-Force the local engine with `npm run build -- --local` (or
-`LANDNR_ENGINE=local npm run build`).
+**2 · Hand-over decided by evidence, not by `onload`.** `src/js/engine.js`
+now waits for the globals the bundle leaves behind:
+
+| signal | meaning |
+| --- | --- |
+| `window.landoGL` | the bundle evaluated (it is created while it runs) |
+| `window.loadingComplete` | its Rive handshake finished |
+| `window.lenis` | **it is driving the page** — only now does the local engine stand down |
+
+No `landoGL` within 4 s, or no `lenis` within 45 s (the WebGL hero is ≈5 MB on
+a cold cache), and the local engine boots and drives the page instead. Nothing
+local touches the DOM while the decision is pending, so a late takeover cannot
+collide with a half-built real engine — and `smooth-scroll.js` refuses to start
+if `window.lenis` appears afterwards. As a nudge, if the bundle's
+`allriveloaded` handshake has not completed after 2.5 s the engine dispatches
+it, which unblocks a boot that is waiting on an artboard that will never
+arrive.
+
+**3 · The failsafe no longer mistakes the intro for a trap.** The inline
+anti-trap in `<head>` used to hide a full-screen overlay after ~9 s — which is
+exactly how long the genuine Rive intro takes. It now checks `window.landoGL`
+first and gives a live engine 45 s. `html.ln-js` (the switch that turns on
+every local-engine CSS rule) is no longer set in `<head>` when the build ships
+the real engine, so the local preloader art never paints over the real one.
+
+`npm run build -- --local` (or `LANDNR_ENGINE=local`) omits the bundle entirely
+and ships the fallback engine on its own.
 
 ## The engine (fallback)
 
-`src/js/` — thirteen ES modules, no framework, no build step. Boot order is in
+`src/js/` — fourteen ES modules, no framework, no build step. Boot order is in
 `engine.js`; every stage is wrapped so one failure can never leave the page
 hidden or unscrollable.
 
@@ -194,23 +256,25 @@ hidden or unscrollable.
 | `ambient.js` | WebGL shaders | 2D-canvas light fields for `[data-gl="head"]`, `[data-gl="carousel"]` and `[data-gl="background"]`, blended by `data-gl-change-*` and the nav theme, rendered at 0.55× (they are gradients) with grain added in CSS |
 | `sections.js` | — | hero intro + parallax, the "tap to lock" control, the sticky ON TRACK / OFF TRACK diptych, the draggable social filmstrip, video mounts, scroll indicator |
 | `preloader.js` | Rive transition | turns `.transition-w` into a real loader: actual asset progress, arms the capture's own "Load Norris" button, auto-enters, then hands over to the hero intro and fires `ln:ready` |
-| `engine.js` | the bundle | browser hints (`.is-safari`, `.is-iphone`), ordered init, debug API on `window.landnr` |
+| `diagnostics.js` | — | the `/?engine` panel: which engine is driving, Rive/Lenis/WebGL state, and every refused request |
+| `engine.js` | the bundle | browser hints (`.is-safari`, `.is-iphone`), ordered init, the real-engine hand-over, debug API on `window.landnr` |
 
 ## Fidelity
 
 | Live site | This build |
 | --- | --- |
-| Rive animations (`.riv` files, never referenced by URL in the capture) | SVG/image stand-ins in the same slots, or the capture's own `[data-rive-placeholder]` art |
-| WebGL background | 2D-canvas light fields in the brand palette + CSS grain |
-| Lenis | `smooth-scroll.js` (same classes, same feel, desktop pointer only) |
-| GSAP + SplitText + ScrollTrigger | `split-text.js`, `reveals.js`, `horizontal.js` |
-| Seven video streams | Poster frames with hover scale; drop a playable URL into `streamConfig` in `sections.js` to mount a real iframe |
-| jQuery + Webflow runtime | Removed — the capture has zero `data-w-id` attributes and no interactive Webflow components, so they were dead weight |
+| OFF+BRAND engine bundle | **the same file**, vendored and re-pointed at the local mirror |
+| Rive animations (helmet-reef, signature, circuits, arrow, hamburger, off-icons, collabs, phrases, page transition) | **the same `.riv` artboards**, vendored |
+| WebGL hero, helmet hall of fame, track carousel, background wash | **the same `gl/` tree** — models, HDRIs, MSDF fonts, Draco/Basis, `webp` + `ktx2` textures, vendored |
+| Lenis + GSAP + SplitText + ScrollTrigger | **theirs**, inside the bundle. `src/js` is the fallback: `smooth-scroll.js`, `split-text.js`, `reveals.js`, `horizontal.js` |
+| jQuery + Webflow runtime | vendored from the same CDN paths, served locally (`window.Webflow.destroy()`/`.ready()` run inside the bundle's boot) |
+| Seven video streams | the bundle mounts Vimeo players exactly as the live site does; the capture carried no video IDs for the fallback engine, which shows poster frames with hover scale instead |
+| Photography + fonts | still the Webflow CDN (public, no referrer lock) |
 | GTM, gtag, Klaviyo, iubenda | Removed — nothing is tracked, no cookies are set |
 
-Images, fonts and the stylesheet still come from the original CDN, so the page
-needs network access to look right. Everything structural and behavioural is
-local.
+Everything that animates is served from this origin. The only remaining
+third-party requests are images and fonts from `cdn.prod.website-files.com`,
+the Vimeo players the bundle mounts, and outbound links.
 
 ## Testing
 
@@ -229,35 +293,64 @@ exited, `html.ln-ready` was set, the nav resolved a theme, the hero intro
 played, and the horizontal pin engaged — plus that nothing threw. Below 992 px
 the pin correctly reports itself inactive.
 
-The `remote` scenario fakes a successful bundle load (`window.__lnRemote`) and
-asserts the opposite: `ln-remote` set, `ln-js` gone, our split-text and
-preloader never ran, all 17 original Rive canvases and 70 `[split-text]`
-elements left untouched, **and the failsafe still armed** — a loaded bundle
-proves nothing until the page is visible. It then advances the clock past the
-deadlines and checks the watchdog rescues the page: `ln-js` back, text split by
-us, `ln:ready` fired once the rescued preloader enters. `remote-happy` is the
-other branch: Lenis exists and the overlay is gone, so the watchdog disarms
-the failsafe, never rescues, and our engine stays out entirely.
+The `remote` scenario is the regression test for the bug above: it fakes a
+successful bundle **load** (`window.__lnRemote.loaded`) and nothing else — no
+`landoGL`, no `lenis` — and asserts that the local engine does *not* stand down
+forever. It waits, leaves all 17 original Rive canvases and 70 `[split-text]`
+elements untouched, keeps the failsafe armed, and then, past the 4 s
+"did it even evaluate" deadline, takes the page over: `ln-js` back, text split
+by us, `ln:ready` fired once the rescued preloader enters.
 
-The shim proves the engine runs and mutates the document correctly. It cannot
-prove pixels: it has no stylesheet, so visual verification needs a browser.
+`remote-happy` is the other branch: `window.landoGL` and `window.lenis` exist
+and the overlay is gone, so the hand-over happens, `ln-remote-live` is set, the
+local engine never touches the DOM, and no failsafe is applied.
+
+`npm run verify` covers the half the shim cannot: it reads the *built* bundle,
+derives every asset it will request (Rive artboards under both mirror bases,
+the page transition, models, HDRIs, MSDF fonts, decoders, both the `webp` and
+`ktx2` texture sets, the Rive WASM), fetches all 68 over HTTP and checks status,
+size and content type — plus that no cross-origin engine host survives in the
+built file.
+
+Neither harness can prove pixels: there is no browser in this sandbox. That is
+what `/?engine` is for — it prints, in the page, which engine is driving, how
+many Rive canvases are live, whether Lenis owns the scroll, and anything the
+network refused.
 
 ## Layout
 
 ```
 source/          the capture (homepage HTML, GTM runtime kept for reference)
+vendor/          the mirror: the real engine + everything it fetches (committed)
+  offbrand/<host>/<path>   byte-exact, same shape as the original URLs
+  npm/@rive-app/…          the Rive WASM runtime, from npm
+  fetch.sh · inspect.sh    the harvester and its report
+  manifest.json            what was fetched, from where, how big
 scripts/
   lib/html.mjs       tokenizer · tree · serializer · svg repair
   lib/transform.mjs  strip / inject / compose
+  vendor/localize.mjs  mirror → dist/assets/vendor/, URL literals rewritten
   build.mjs          pipeline + checks + build-report.json
   dev/dom-shim.mjs   DOM + layout shim for Node
   dev/smoke.mjs      one scenario
   dev/smoke-all.mjs  every scenario
-src/css/engine.css   the additive stylesheet
-src/js/              the engine (13 modules)
+  dev/verify-engine.mjs  request every asset the built engine can ask for
+src/css/engine.css   the additive stylesheet (fallback engine + diagnostics)
+src/js/              the fallback engine (14 modules)
 server.mjs           zero-dependency static server (0.0.0.0:4173, --watch)
+.github/workflows/vendor-offbrand.yml   re-harvests vendor/ on demand
 dist/                build output (git-ignored)
 ```
+
+## Provenance
+
+`vendor/` is a mirror of files that belong to OFF+BRAND, McLaren and Lando
+Norris — the engine bundle, the Rive artboards, the 3D assets — harvested from
+the hosts the live site uses and from the Wayback Machine, and kept here so
+that this rebuild can run the animation it was designed around. It is not
+licensed for redistribution: treat this repository as a private study of a
+published site, keep it out of production, and delete `vendor/` (then build
+with `--local`) if you want a version that ships nothing but your own code.
 
 `window.landnr` exposes `report`, `scrollTo`, `openMenu`, `toggleMenu`,
 `pauseMarquees`, `refreshAmbient`, `splitPending`, `disableSmoothScroll` and

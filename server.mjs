@@ -47,6 +47,14 @@ const MIME = {
   '.txt': 'text/plain; charset=utf-8',
   '.riv': 'application/octet-stream',
   '.mp4': 'video/mp4',
+  // the vendored OFF+BRAND engine: WebAssembly, glTF and the textures it
+  // decodes. Wrong types here mean a silent WebGL/Rive failure in the browser.
+  '.wasm': 'application/wasm',
+  '.glb': 'model/gltf-binary',
+  '.gltf': 'model/gltf+json',
+  '.hdr': 'image/vnd.radiance',
+  '.ktx2': 'image/ktx2',
+  '.bin': 'application/octet-stream',
 };
 
 buildIfNeeded();

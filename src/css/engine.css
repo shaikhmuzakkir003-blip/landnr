@@ -496,3 +496,35 @@ html.ln-js .nav-menu-img-w.ln-hover{ scale: 1.035; }
 html.ln-js .otot-home-img-w{ transition: opacity 0.8s var(--ln-ease), scale 1.3s var(--ln-ease); }
 
 html.ln-js .otot-home-img-w:not(.ln-active) { opacity: 0.72; scale: 1.03; }
+
+/* ---------------------------------------------------------------------
+   9 · diagnostics panel  (/?engine)
+   Deliberately NOT gated behind html.ln-js: its whole job is to explain what
+   is happening when the *other* engine is driving, or when nothing is.
+   --------------------------------------------------------------------- */
+.ln-diagnostics{
+  position: fixed; left: 12px; bottom: 12px; z-index: 99999;
+  width: min(420px, calc(100vw - 24px));
+  font: 400 11px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #cfe3d4; background: rgba(16, 20, 0, 0.92);
+  border: 1px solid rgba(210, 255, 0, 0.28); border-radius: 10px;
+  backdrop-filter: blur(6px); box-shadow: 0 12px 40px rgba(0,0,0,.45);
+}
+.ln-diagnostics[hidden]{ display: none; }
+.ln-dx-head{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 8px 6px 10px; border-bottom: 1px solid rgba(210,255,0,.18);
+  text-transform: uppercase; letter-spacing: .12em; color: #d2ff00;
+}
+.ln-dx-head button{
+  all: unset; cursor: pointer; padding: 0 4px; color: #8fa795; font-size: 14px;
+}
+.ln-dx-head button:hover{ color: #d2ff00; }
+.ln-dx-body{ padding: 6px 10px 9px; max-height: 46vh; overflow: auto; }
+.ln-dx-row{ display: grid; grid-template-columns: 84px 1fr; gap: 8px; padding: 1px 0; }
+.ln-dx-k{ color: #7e8377; text-transform: uppercase; letter-spacing: .08em; font-size: 10px; }
+.ln-dx-v{ word-break: break-word; }
+.ln-dx-row.is-ok .ln-dx-v{ color: #d2ff00; }
+.ln-dx-row.is-warn .ln-dx-v{ color: #ffd166; }
+.ln-dx-row.is-bad .ln-dx-v{ color: #ff6b6b; }
+.ln-dx-row.is-muted .ln-dx-v{ color: #b9bdb0; }

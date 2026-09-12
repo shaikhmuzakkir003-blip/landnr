@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 import { parse, serialize, findAll, isElement, getAttr, hasClass } from './lib/html.mjs';
 import { buildHome, buildSubPages, SUB_PAGES, SITE_ORIGIN } from './lib/transform.mjs';
+import { collectVendor, localWebflowPaths, vendorAvailable, ENGINE_DIST } from './vendor/localize.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(here, '..');
@@ -45,27 +46,43 @@ async function main() {
   log('landnr build');
   log('  source   ', relative(ROOT, SOURCE), `(${kb(sourceHtml.length)})`);
 
-  /* 1 — homepage ------------------------------------------------------ */
+  /* 1 — the real engine, vendored ------------------------------------- */
+  // LANDNR_ENGINE=local / --local ships without it: src/js/engine.js then
+  // drives the page on its own. Otherwise the homepage runs the genuine
+  // OFF+BRAND bundle out of vendor/, same-origin, with every Rive file, every
+  // WebGL asset and the Rive WASM served from here as well.
+  const wantsEngine = process.env.LANDNR_ENGINE !== 'local' && !args.includes('--local');
+  const vendor = wantsEngine ? await collectVendor() : { files: [], engine: null, hits: {} };
+  if (wantsEngine && !vendorAvailable()) {
+    log('  engine    vendor/ is empty — harvest it with scripts/vendor/fetch.sh');
+    log('            (or run the vendor-offbrand-assets workflow) to get the real');
+    log('            OFF+BRAND engine; building with the local engine instead');
+  }
+  const engineSrc = vendor.engine || null;
+  const localWebflow = engineSrc ? prefixPaths(localWebflowPaths(vendor.files)) : null;
+  log('  engine   ', engineSrc
+    ? `OFF+BRAND, vendored (${vendor.files.length} files, ${kb(vendor.files.reduce((n, f) => n + f.body.length, 0))}) + local fallback`
+    : 'local only');
+  if (Object.keys(vendor.hits || {}).length) {
+    log('  rewired  ', Object.entries(vendor.hits).map(([k, n]) => `${n}× ${k}`).join(', '));
+  }
+
+  /* 2 — homepage ------------------------------------------------------ */
   const stamp = `built ${new Date().toISOString()} · landnr · homepage capture: Last Published Tue Aug 11 2026`;
-  // The homepage keeps the real OFF+BRAND engine (assets.itsoffbrand.io has no
-  // referrer lock), and src/js/engine.js falls back to the local engine if that
-  // bundle does not come up. LANDNR_ENGINE=local / --local builds local-only.
-  const remoteEngine = process.env.LANDNR_ENGINE !== 'local' && !args.includes('--local');
-  const home = buildHome(sourceHtml, { buildStamp: stamp, remoteEngine });
-  log('  engine   ', remoteEngine ? 'OFF+BRAND bundle + local fallback' : 'local only');
+  const home = buildHome(sourceHtml, { buildStamp: stamp, engineSrc, localWebflow });
   log('  repairs  ', JSON.stringify(home.report.repairs));
   log('  removed  ', `${home.report.scriptsRemoved || 0} scripts, ${home.report.commentsRemoved || 0} comments, ${home.report.embedsRemoved || 0} empty embeds`);
 
-  /* 2 — derived pages ------------------------------------------------- */
+  /* 3 — derived pages ------------------------------------------------- */
   const subs = buildSubPages(home.root, SUB_PAGES);
 
-  /* 3 — assets -------------------------------------------------------- */
+  /* 4 — assets -------------------------------------------------------- */
   const assets = await collectAssets(join(SRC, 'css'), join(SRC, 'js'));
 
-  /* 4 — checks -------------------------------------------------------- */
-  const problems = runChecks({ home, subs, assets, remoteEngine });
+  /* 5 — checks -------------------------------------------------------- */
+  const problems = runChecks({ home, subs, assets, vendor, engineSrc });
 
-  /* 5 — write --------------------------------------------------------- */
+  /* 6 — write --------------------------------------------------------- */
   const files = [
     { path: 'index.html', body: home.html },
     ...subs.map(({ def, html }) => ({
@@ -73,6 +90,7 @@ async function main() {
       body: html,
     })),
     ...assets.map((a) => ({ path: join('assets', a.rel), body: a.body, binary: a.binary })),
+    ...vendor.files,
     ...deployConfig(),
   ];
 
@@ -81,6 +99,13 @@ async function main() {
     sourceBytes: Buffer.byteLength(sourceHtml),
     pages: files.filter((f) => f.path.endsWith('.html')).map((f) => `/${f.path.replace(/index\.html$/, '')}`),
     assets: assets.map((a) => `/assets/${a.rel}`),
+    engine: engineSrc ? {
+      served: engineSrc,
+      original: home.report.engine?.original || null,
+      vendoredFiles: vendor.files.length,
+      vendoredBytes: vendor.files.reduce((n, f) => n + f.body.length, 0),
+      urlRewrites: vendor.hits,
+    } : { served: null, mode: 'local-js-only' },
     repairs: home.report.repairs,
     removed: {
       scripts: home.report.scriptsRemoved || 0,
@@ -99,7 +124,15 @@ async function main() {
     return;
   }
 
-  await rm(DIST, { recursive: true, force: true });
+  // A dev server serving straight out of dist/ holds file handles, so the
+  // occasional ENOTEMPTY is expected: retry rather than fail the build.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try { await rm(DIST, { recursive: true, force: true, maxRetries: 3, retryDelay: 60 }); break; }
+    catch (err) {
+      if (attempt === 4) throw err;
+      await new Promise((r) => setTimeout(r, 120));
+    }
+  }
   for (const file of files) {
     const dest = join(DIST, file.path);
     await mkdir(dirname(dest), { recursive: true });
@@ -109,6 +142,7 @@ async function main() {
   const bytes = files.reduce((n, f) => n + Buffer.byteLength(f.body), 0);
   log(`  pages    ${files.filter((f) => f.path.endsWith('.html')).length}`);
   log(`  assets   ${assets.length} (${kb(assets.reduce((n, a) => n + a.body.length, 0))})`);
+  log(`  vendor   ${vendor.files.length} files (${kb(vendor.files.reduce((n, f) => n + f.body.length, 0))})`);
   log(`  output   dist/ (${kb(bytes)})`);
   if (problems.length) {
     log(`  warnings ${problems.length}`);
@@ -151,6 +185,13 @@ function deployConfig() {
 
 function kb(n) { return `${(n / 1024).toFixed(1)} kB`; }
 
+/** dist paths → page-absolute URLs. */
+function prefixPaths(paths) {
+  const out = {};
+  for (const [key, value] of Object.entries(paths)) out[key] = value ? `/${value}` : null;
+  return out;
+}
+
 async function collectAssets(...dirs) {
   const out = [];
   for (const dir of dirs) {
@@ -179,51 +220,81 @@ async function walk(dir) {
  * Sanity checks that keep the build honest. Each one looks at the *generated*
  * document, not the source, so a regression in the transform shows up here.
  */
-function runChecks({ home, subs, assets, remoteEngine = true }) {
+function runChecks({ home, subs, assets, vendor, engineSrc }) {
   const problems = [];
   const { root } = parse(home.html);
+  const scripts = findAll(root, (n) => isElement(n, 'script')).map((n) => getAttr(n, 'src') || '');
+  const links = findAll(root, (n) => isElement(n, 'link')).map((n) => getAttr(n, 'href') || '');
+  const vendorPaths = new Set((vendor.files || []).map((f) => `/${f.path}`));
 
   // a) no blocked third parties survived
   for (const script of findAll(root, (n) => isElement(n, 'script'))) {
     const src = getAttr(script, 'src') || '';
-    if (/klaviyo|iubenda|googletagmanager|localhost:|lando\.itsoffbrand\.io/.test(src)) {
-      problems.push(`blocked script still present: ${src}`);
-    }
-    if (!remoteEngine && /assets\.itsoffbrand\.io|d3e54v103j8qbb|\/js\/lando-offbrand\./.test(src)) {
-      problems.push(`remote engine present in a local-only build: ${src}`);
+    if (/klaviyo|iubenda|googletagmanager|localhost:|itsoffbrand\.io/.test(src)) {
+      problems.push(`blocked or referrer-locked script still present: ${src}`);
     }
     const body = script.children.filter((c) => c.type === 'rawtext').map((c) => c.value).join('');
     if (/gtag\(|google_tags_first_party/.test(body)) problems.push('analytics inline script still present');
   }
 
-  // b) the published stylesheet + engine are both wired up
-  const links = findAll(root, (n) => isElement(n, 'link')).map((n) => getAttr(n, 'href') || '');
+  // b) the engine -------------------------------------------------------
+  if (engineSrc) {
+    const tag = findAll(root, (n) => isElement(n, 'script') && getAttr(n, 'src') === engineSrc);
+    if (!tag.length) problems.push(`the vendored engine is not wired up: ${engineSrc}`);
+    else if (!getAttr(tag[0], 'onload')) problems.push('engine tag has no load marker (src/js/engine.js needs it)');
+    if (!vendorPaths.has(engineSrc)) problems.push(`engine file missing from the build: ${engineSrc}`);
+
+    // the whole point of vendoring: the bundle must not reach off-origin for
+    // anything it needs to boot
+    const code = (vendor.files || []).find((f) => `/${f.path}` === engineSrc)?.body?.toString('utf8') || '';
+    for (const host of ['https://lando.itsoffbrand.io', 'https://assets.itsoffbrand.io', 'https://unpkg.com/', 'https://cdn.jsdelivr.net/npm/']) {
+      if (code.includes(host)) problems.push(`vendored engine still calls out to ${host}`);
+    }
+    for (const must of [
+      '/assets/vendor/offbrand/lando.itsoffbrand.io/rive/page-transition.riv',
+      '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/reef.riv',
+      '/assets/vendor/offbrand/assets.itsoffbrand.io/lando/rive/btn-ui.riv',
+      '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/models/helmet-21.glb',
+      '/assets/vendor/offbrand/lando.itsoffbrand.io/gl/draco/draco_decoder.wasm',
+      '/assets/vendor/npm/rive.wasm',
+    ]) {
+      if (!vendorPaths.has(must)) problems.push(`engine asset missing from the build: ${must}`);
+    }
+    // every mirror URL the bundle now asks for should resolve to a file we ship
+    for (const ref of new Set(code.match(/"\/assets\/vendor\/[^"]+"/g) || [])) {
+      const url = ref.slice(1, -1);
+      if (vendorPaths.has(url)) continue;
+      // base URLs are concatenated with a file name at runtime
+      if (!vendor.files.some((f) => `/${f.path}`.startsWith(url))) {
+        problems.push(`vendored engine asks for a file that is not in the build: ${url}`);
+      }
+    }
+  } else if (scripts.some((src) => src.includes('/assets/vendor/engine/'))) {
+    problems.push('local-only build still references the vendored engine');
+  }
+
+  // the two scripts the engine calls into (jQuery + the Webflow runtime)
+  if (!scripts.some((src) => src.includes('jquery-3.5.1'))) problems.push('jQuery is missing (the Webflow runtime needs it)');
+  if (!scripts.some((src) => src.includes('/js/lando-offbrand.'))) problems.push('Webflow runtime is missing');
+
+  // c) the published stylesheet + local engine are both wired up
   if (!links.some((h) => h.includes('lando-offbrand.shared'))) problems.push('Webflow stylesheet link is missing');
   if (!links.some((h) => h.endsWith('/assets/css/engine.css'))) problems.push('engine.css is not linked');
-  const scripts = findAll(root, (n) => isElement(n, 'script')).map((n) => getAttr(n, 'src') || '');
   if (!scripts.some((s) => s.endsWith('/assets/js/engine.js'))) problems.push('engine.js is not referenced');
-  if (remoteEngine) {
-    const bundle = findAll(root, (n) => isElement(n, 'script')
-      && (getAttr(n, 'src') || '').includes('lando-by-OFF+BRAND.js'));
-    if (!bundle.length) problems.push('remote engine bundle is missing from the homepage');
-    else if (!getAttr(bundle[0], 'onload')) problems.push('remote engine bundle has no load marker');
-    if (!scripts.some((s) => s.includes('transitions-rive-isolate'))) problems.push('transition Rive script is missing');
-    if (!scripts.some((s) => s.includes('d3e54v103j8qbb'))) problems.push('jQuery is missing (the Webflow runtime needs it)');
-    if (!scripts.some((s) => s.includes('/js/lando-offbrand.'))) problems.push('Webflow runtime is missing');
-  }
+
   for (const { def, html } of subs) {
-    if (/itsoffbrand|d3e54v103j8qbb|\/js\/lando-offbrand\./.test(html)) {
-      problems.push(`${def.slug}: sub-page should not carry the remote engine`);
+    if (/itsoffbrand|\/assets\/vendor\/engine\//.test(html)) {
+      problems.push(`${def.slug}: sub-page should not carry the OFF+BRAND engine`);
     }
   }
 
-  // c) every local asset reference exists in the build
-  const assetPaths = new Set(assets.map((a) => `/assets/${a.rel}`));
+  // d) every local asset reference exists in the build
+  const assetPaths = new Set([...assets.map((a) => `/assets/${a.rel}`), ...vendorPaths]);
   for (const ref of [...links, ...scripts]) {
     if (ref.startsWith('/assets/') && !assetPaths.has(ref)) problems.push(`missing asset: ${ref}`);
   }
 
-  // d) every internal link has a page
+  // e) every internal link has a page
   const routes = new Set(['/', '/index.html', ...subs.flatMap(({ def }) => [def.path, def.path.replace(/\/$/, '')])]);
   for (const a of findAll(root, (n) => isElement(n, 'a'))) {
     const href = getAttr(a, 'href') || '';
@@ -232,16 +303,16 @@ function runChecks({ home, subs, assets, remoteEngine = true }) {
     if (!routes.has(clean) && !routes.has(`${clean}/`)) problems.push(`dead internal link: ${href}`);
   }
 
-  // e) structural integrity
+  // f) structural integrity
   const svgOpen = (home.html.match(/<svg\b/g) || []).length;
   const svgClose = (home.html.match(/<\/svg>/g) || []).length;
   if (svgOpen !== svgClose) problems.push(`unbalanced <svg>: ${svgOpen} open / ${svgClose} close`);
 
-  // f) the preloader must never be able to trap a no-JS visitor
+  // g) the preloader must never be able to trap a no-JS visitor
   if (!/<noscript>/.test(home.html)) problems.push('no <noscript> fallback for the preloader');
   if (/data-start="hidden"/.test(home.html)) problems.push('page is still data-start="hidden"');
 
-  // g) sub-pages carry the real chrome
+  // h) sub-pages carry the real chrome
   for (const { def, html } of subs) {
     if (!html.includes('data-nav-wrap')) problems.push(`${def.slug}: nav missing`);
     if (!html.includes('is-footer')) problems.push(`${def.slug}: footer missing`);

@@ -3,8 +3,10 @@
  *
  * The capture was designed around OFF+BRAND's bundle: it hides the page,
  * splits the type, mounts Rive art, drives a WebGL wash, pins a horizontal
- * section and runs the nav. That bundle lives on a referrer-locked host, so
- * this module is the replacement. Order matters:
+ * section and runs the nav. The build vendors that bundle and everything it
+ * fetches, so on the homepage it is the real engine that runs — and this
+ * module is what drives the page when it cannot (a --local build, a sub-page,
+ * a browser that refused the bundle). Order matters:
  *
  *   1. browser hints the original bundle set (.is-safari / .is-iphone)
  *   2. Rive stand-ins           — changes the DOM before anything measures
@@ -29,74 +31,128 @@ import { initAmbient, refreshAmbient } from './ambient.js';
 import { initSections, playHero, streamConfig } from './sections.js';
 import { initSmoothScroll, disable as disableSmoothScroll, scrollTo } from './smooth-scroll.js';
 import { initPreloader } from './preloader.js';
+import { initDiagnostics } from './diagnostics.js';
 
-const VERSION = '1.1.0';
+const VERSION = '2.0.0';
 const startedAt = performance.now();
-const REMOTE_RESCUE_MS = 12000;
-const REMOTE_REVEAL_MS = 16000;
 
-/**
- * Two engines, one page.
+/* ------------------------------------------------------------------ *
+ * Which engine drives this page?
  *
- * The homepage ships the real OFF+BRAND bundle (restored from the HTML comment
- * it was parked in, on the one host that does not reject foreign referrers).
- * It is a `defer` script and this is a module, so by the time we run, its
- * load has already succeeded or failed and left a marker on `window`.
+ * The homepage ships the genuine OFF+BRAND bundle, vendored into
+ * /assets/vendor/ by the build so that every file it fetches — the page
+ * transition Rive, the seven artboards, the WebGL hero, the Rive WASM — comes
+ * from this origin. Its boot is a chain of awaits:
  *
- *   · it loaded  → stand down: the genuine engine drives the real Rive helmet,
- *                  signature, circuits, arrows and page transition. Our CSS
- *                  switches itself off with the `ln-js` class, and a watchdog
- *                  takes over if the bundle loaded but never came up (its boot
- *                  awaits every `.riv` file before it starts Lenis).
- *   · it failed  → boot the local engine, which is a complete replacement.
- */
-if (window.__lnRemote?.loaded) handOverToRemoteEngine();
+ *     await pageTransitionRive()          ← rejects if page-transition.riv 404s
+ *     await Promise.all([webGL(), allRiveLoaded()])
+ *     then construct Lenis and hand the page to GSAP
+ *
+ * which is why a single refused request used to leave the whole site static:
+ * the chain threw before Lenis existed, and this module had already stood down
+ * because the <script> had merely *loaded*. So the decision is no longer
+ * "did the file arrive" but "is the engine actually driving":
+ *
+ *   window.landoGL  → the bundle evaluated (set while it runs, synchronously)
+ *   window.lenis    → it finished booting and owns the scroll
+ *
+ * Until `window.lenis` exists, nothing here touches the DOM, so a late
+ * takeover by the local engine cannot collide with a half-built real one.
+ * ------------------------------------------------------------------ */
+const EVALUATED_BY_MS = 4000;    // no landoGL by now ⇒ the bundle threw on load
+const BOOTED_BY_MS = 45000;      // the WebGL hero is ~5 MB on a cold cache
+const POLL_MS = 150;
+const NUDGE_AFTER_MS = 2500;     // when to start unblocking their Rive handshake
+const NUDGE_EVERY_MS = 1500;
+
+/** Set by exposeApi(); used to surface a failure on screen. */
+let diagnosticsApi = null;
+
+/** Their Lenis instance — the moment this exists, the real engine is driving. */
+const realEngineUp = () => Boolean(window.lenis);
+/** Their GL config object — created while the bundle evaluates. */
+const realEngineEvaluating = () => Boolean(window.landoGL);
+
+if (window.__lnRemote?.loaded) waitForRealEngine();
 else boot();
 
-function handOverToRemoteEngine() {
+function waitForRealEngine() {
   docEl.classList.remove('ln-js');
   docEl.classList.add('ln-remote');
   report.remote = { loaded: true, at: Math.round(performance.now()) };
-  note('OFF+BRAND bundle loaded — local engine standing down');
+  note('OFF+BRAND bundle is in the page — waiting for it to take the scroll');
 
-  // Deliberately NOT dispatching ln:ready here. The inline failsafe must stay
-  // armed until something proves the page is actually visible — a bundle can
-  // report "loaded" and then stall forever waiting on its .riv files, and a
-  // disarmed failsafe is exactly how a visitor ends up staring at a bare
-  // lime overlay.
   exposeApi();
   banner();
 
   const started = performance.now();
-  const watchdog = setInterval(() => {
-    const waited = performance.now() - started;
-    const alive = Boolean(window.lenis || window.landoGL || window.lenisStart);
+  let lastNudge = 0;
 
+  const poll = setInterval(() => {
+    const waited = performance.now() - started;
+
+    if (realEngineUp()) {
+      clearInterval(poll);
+      handOver(waited);
+      return;
+    }
+
+    /* Their Rive loader counts artboards down and fires `allriveloaded` at
+       zero — errors decrement the counter too, so a missing artboard cannot
+       wedge it. But if the loader never ran at all, the boot chain waits
+       forever on an event nobody will send. Send it. */
+    if (!window.loadingComplete && waited > NUDGE_AFTER_MS && waited - lastNudge > NUDGE_EVERY_MS) {
+      lastNudge = waited;
+      window.dispatchEvent(new CustomEvent('allriveloaded'));
+      note('nudged the Rive handshake (allriveloaded)');
+    }
+
+    if (!realEngineEvaluating() && waited > EVALUATED_BY_MS) {
+      giveUp('loaded but never evaluated');
+      return;
+    }
+    if (waited > BOOTED_BY_MS) {
+      giveUp('never finished booting');
+    }
+  }, POLL_MS);
+
+  function giveUp(reason) {
+    clearInterval(poll);
+    if (realEngineUp()) { handOver(performance.now() - started); return; }
+    report.remote.rescued = true;
+    report.remote.reason = reason;
+    note(`real engine ${reason} — local engine taking over`);
+    docEl.classList.remove('ln-remote');
+    boot();
+    // Something the build expected to work did not. Say so on screen rather
+    // than leaving a visitor wondering why the site feels flat.
+    diagnosticsApi?.show?.();
+  }
+}
+
+/** The real engine has the page. Stay out of its way, and report when the
+ *  intro overlay it is driving has finally lifted. */
+function handOver(waited) {
+  report.remote.alive = true;
+  report.remote.bootMs = Math.round(waited);
+  docEl.classList.add('ln-remote-live');
+  note(`OFF+BRAND engine is driving (booted in ${Math.round(waited)}ms)`);
+  console.info('[landnr] the real OFF+BRAND engine owns this page');
+
+  // Not ln:ready yet: the Rive intro is still on screen and only the visitor
+  // (or their "Load Norris" click) ends it. The inline failsafe knows the
+  // difference — it checks window.landoGL before it touches anything.
+  const started = performance.now();
+  const watch = setInterval(() => {
     if (!overlayCovering()) {
-      clearInterval(watchdog);
-      report.remote.alive = alive;
+      clearInterval(watch);
+      docEl.classList.add('ln-ready');
+      report.remote.revealedAt = Math.round(performance.now() - startedAt);
       window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true } }));
-      note('remote engine owns the page — failsafe disarmed');
+      note('intro overlay lifted — page is live');
       return;
     }
-    if (!alive && waited > REMOTE_RESCUE_MS) {
-      clearInterval(watchdog);
-      note('remote engine loaded but never came up — local engine taking over');
-      report.remote.rescued = true;
-      docEl.classList.remove('ln-remote');
-      boot();
-      return;
-    }
-    if (waited > REMOTE_REVEAL_MS) {
-      // Their engine is alive but the preloader overlay never lifted (its
-      // transition Rive never arrived). Lift it over their engine: they keep
-      // driving scroll and animation, the visitor gets a page.
-      clearInterval(watchdog);
-      report.remote.forcedReveal = true;
-      docEl.classList.add('ln-failsafe');
-      window.dispatchEvent(new CustomEvent('ln:ready', { detail: { remote: true, forced: true } }));
-      note('preloader overlay never lifted — forcing the page visible');
-    }
+    if (performance.now() - started > 180000) clearInterval(watch);
   }, 400);
 }
 
@@ -112,7 +168,9 @@ function overlayCovering() {
 }
 
 function boot() {
+  if (realEngineUp()) { handOver(performance.now() - startedAt); return; }
   docEl.classList.add('ln-js');
+  docEl.classList.remove('ln-remote');
   detectBrowser();
 
   safe('rive-fallbacks', () => initRiveFallbacks(doc));
@@ -165,9 +223,15 @@ function detectBrowser() {
 }
 
 function exposeApi() {
+  const diagnostics = safe('diagnostics', () => initDiagnostics({ report, version: VERSION }));
+  diagnosticsApi = diagnostics;
   window.landnr = {
     version: VERSION,
     report,
+    /** `landnr.diagnostics()` — or load the page with ?engine — for the
+     *  on-screen readout of which engine is driving and what was refused. */
+    diagnostics: diagnostics?.show || (() => {}),
+    hideDiagnostics: diagnostics?.hide || (() => {}),
     scrollTo,
     openMenu: () => toggleMenu(true),
     closeMenu,
@@ -194,7 +258,8 @@ function banner() {
   );
   console.log(
     `%c homepage markup, type and colour from the published capture · engine ${VERSION}`
-    + `${docEl.classList.contains('ln-remote') ? ' (standing by behind OFF+BRAND)' : ' (driving)'}`
+    + `${docEl.classList.contains('ln-remote-live') ? ' (standing by behind OFF+BRAND)'
+      : docEl.classList.contains('ln-remote') ? ' (waiting on OFF+BRAND)' : ' (driving)'}`
     + ' · window.landnr for the API',
     subtle,
   );

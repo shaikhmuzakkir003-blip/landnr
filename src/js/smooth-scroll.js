@@ -27,6 +27,9 @@ let applying = false;
 let detachWheel = null;
 
 export function initSmoothScroll() {
+  // The real OFF+BRAND engine drives the scroll with Lenis. If it came up
+  // after we started booting, it wins — two smooth scrollers is a fight.
+  if (window.lenis) return finish('the OFF+BRAND engine owns the scroll');
   if (reducedMotion()) return finish('reduced-motion');
   if (isTouch()) return finish('touch device');
   if (!('scrollTo' in window)) return finish('no scrollTo');

@@ -62,21 +62,29 @@ const BLOCKED_SRC = [
 ];
 
 /**
- * The original engine and the three scripts it needs. `assets.itsoffbrand.io`
- * has no referrer check, so a browser *can* run the real OFF+BRAND bundle —
- * which means the real Rive art (helmet, signature, circuits, arrows) and the
- * real page transition. They stay in the page unless the build is asked for a
- * purely local engine (LANDNR_ENGINE=local), and src/js/engine.js stands down
- * when it sees them come up.
+ * The engine scripts in the capture. Every one of them points at a host that
+ * rejects foreign referrers, so they are all dropped — and, when this build
+ * has the vendored mirror (see scripts/vendor/localize.mjs), the one the live
+ * site actually runs is put back pointing at the local copy.
  */
-export const REMOTE_ENGINE_SRC = [
-  'assets.itsoffbrand.io',                // OFF+BRAND engine + transitions
-  'd3e54v103j8qbb.cloudfront.net',        // jQuery (the Webflow runtime needs it)
-  '/js/lando-offbrand.',                  // Webflow runtime (engine calls window.Webflow)
+export const ENGINE_SRC = [
+  'lando.itsoffbrand.io/dev-js/',
+  'assets.itsoffbrand.io/lando/dev-js/',
 ];
 
-/** The bundle whose load decides remote-vs-local at runtime. */
-export const REMOTE_ENGINE_BUNDLE = 'lando-by-OFF+BRAND.js';
+/**
+ * The two scripts the engine calls into: jQuery and the Webflow runtime
+ * (`window.Webflow.destroy()` / `.ready()` run inside the bundle's boot). They
+ * are kept, and rewritten to the local mirror when there is one.
+ */
+export const RUNTIME_SRC = [
+  'd3e54v103j8qbb.cloudfront.net',        // jQuery
+  '/js/lando-offbrand.',                  // Webflow runtime
+];
+
+/** Kept for the checks and the smoke harness: what "the real engine" means. */
+export const REMOTE_ENGINE_SRC = [...ENGINE_SRC, ...RUNTIME_SRC];
+export const REMOTE_ENGINE_BUNDLE = 'lando.OFF+BRAND';
 
 /** Inline scripts that must not survive the build. */
 const BLOCKED_INLINE = [
@@ -99,6 +107,17 @@ const NOISE_COMMENTS = [
   'script async type=',
   'link rel="preload"',
   'as="style"',
+];
+
+/**
+ * Scripts a sub-page never needs: the engine (there is no `.transition-w` and
+ * no Rive art to drive) plus the jQuery/Webflow runtime it calls into.
+ */
+const SUB_PAGE_DROP = [
+  ...ENGINE_SRC,
+  '/assets/vendor/engine/',
+  'jquery-3.5.1',
+  '/js/lando-offbrand.',
 ];
 
 export const SUB_PAGES = [
@@ -165,69 +184,112 @@ export const SUB_PAGES = [
  * ------------------------------------------------------------------ */
 
 /**
- * The capture has the engine commented out.
+ * Put the engine back — locally.
  *
- * Whoever saved the page left a ladder of alternative builds inside HTML
- * comments. The one the live site actually runs is
- * `lando.itsoffbrand.io/dev-js/lando.OFF+BRAND.gold-android-fix-03.js` — and
- * that host answers "Access denied - Invalid referrer" to any origin that is
- * not landonorris.com, so from a local build it can only ever be a 403.
+ * The capture's <head> asks for `lando.itsoffbrand.io/dev-js/lando.OFF+BRAND
+ * .gold-android-fix-03.js`. That host answers "Access denied - Invalid
+ * referrer" to any origin that is not landonorris.com, and the bundle's first
+ * `await` is `page-transition.riv` from the same host — so on any other domain
+ * the promise rejects, the boot function throws, Lenis is never constructed and
+ * the page never animates at all. That is the whole of the "no animation" bug.
  *
- * Two of the commented-out builds sit on `assets.itsoffbrand.io`, which has no
- * referrer lock: the full OFF+BRAND app bundle (Lenis, GSAP, the Rive loader
- * and the `allriveloaded` handshake) and the Rive page-transition script.
- * Restoring those two gives the browser the genuine engine — real Rive helmet,
- * signature, circuits, button arrows and transition — and `src/js/engine.js`
- * stands down when it sees them come up. `referrerpolicy="no-referrer"` plus a
- * document-level referrer meta give the requests (and the `.riv` files the
- * bundle fetches itself) the best chance of being accepted.
+ * `vendor/` holds a byte-exact mirror of the engine and every file it fetches
+ * (Rive art, WebGL hero, WASM runtime), and scripts/vendor/localize.mjs
+ * rewrites the bundle's URLs to it. So the tag that goes back into the page is
+ * the *same engine*, served from this origin: no referrer check, no CORS, no
+ * third party to change its mind.
+ *
+ * Without the mirror (`npm run build -- --local`, or a checkout that never ran
+ * the harvester) no engine tag is inserted at all and src/js/engine.js drives
+ * the page on its own.
  */
-function restoreRemoteEngine(root, report) {
-  for (const comment of findAll(root, (n) => n.type === 'comment')) {
-    const match = /<script[^>]*\bsrc="([^"]*lando-by-OFF\+BRAND\.js)"/.exec(comment.value || '');
-    if (!match) continue;
-    insertAfter(root, comment, fragment(
-      `<script defer referrerpolicy="no-referrer" src="${match[1]}"`
-      + ` onload="window.__lnRemote={loaded:1}" onerror="window.__lnRemote={failed:1}"></script>`,
-    ));
-    removeNode(root, comment);
-    report.remoteEngine = match[1];
-    break;
-  }
-
-  for (const div of findAll(root, (n) => isElement(n, 'div') && hasClass(n, 'js__embed'))) {
-    const comment = (div.children || []).find((c) => c.type === 'comment'
-      && (c.value || '').includes('transitions-rive-isolate.js'));
-    if (!comment) continue;
-    const match = /<script[^>]*\bsrc="([^"]*transitions-rive-isolate\.js)"/.exec(comment.value);
-    if (!match) continue;
-    insertAfter(root, div, fragment(
-      `<script referrerpolicy="no-referrer" src="${match[1]}"></script>`,
-    ));
-    removeNode(root, div);
-    report.remoteTransitions = match[1];
-    break;
-  }
+/** Map a captured CDN URL onto its vendored copy, if this build has one. */
+function localise(url, localWebflow) {
+  if (!url || !localWebflow) return null;
+  if (url.includes('lando-offbrand.shared.5b4e934f7.css')) return localWebflow.css;
+  if (url.includes('jquery-3.5.1.min')) return localWebflow.jquery;
+  if (url.includes('lando-offbrand.751e0867')) return localWebflow.runtime;
+  if (url.includes('lando-offbrand.schunk')) return localWebflow.schunk;
+  return null;
 }
 
-export function cleanDocument(root, report = {}, { remoteEngine = true } = {}) {
+function engineTag(src) {
+  return `<script defer src="${src}"`
+    + ` onload="window.__lnRemote={loaded:1}"`
+    + ` onerror="window.__lnRemote={failed:1}"></script>`;
+}
+
+export function cleanDocument(root, report = {}, { engineSrc = null, localWebflow = null } = {}) {
   const bump = (key, by = 1) => { report[key] = (report[key] || 0) + by; };
 
   // Scripts -------------------------------------------------------------
   for (const script of findAll(root, (n) => isElement(n, 'script'))) {
     const src = getAttr(script, 'src') || '';
     const body = script.children.filter((c) => c.type === 'rawtext').map((c) => c.value).join('');
-    const blocked = BLOCKED_SRC.some((needle) => src.includes(needle))
-      || BLOCKED_INLINE.some((needle) => body.includes(needle))
-      || (!remoteEngine && REMOTE_ENGINE_SRC.some((needle) => src.includes(needle)));
-    if (blocked) {
+
+    if (BLOCKED_INLINE.some((needle) => body.includes(needle))) {
+      removeNode(root, script);
+      bump('scriptsRemoved');
+      continue;
+    }
+
+    // The engine itself: drop the referrer-locked original, and put the local
+    // mirror in its place — once, in the position the capture had it.
+    if (ENGINE_SRC.some((needle) => src.includes(needle))) {
+      if (engineSrc && !report.engine) {
+        insertAfter(root, script, fragment(engineTag(engineSrc)));
+        report.engine = { original: src, served: engineSrc };
+        bump('engineLocalised');
+      } else {
+        bump('engineDuplicatesDropped');
+      }
+      removeNode(root, script);
+      bump('scriptsRemoved');
+      continue;
+    }
+
+    // jQuery + the Webflow runtime: keep, but serve them from the mirror when
+    // there is one, so the page has no third-party dependency left.
+    const runtime = RUNTIME_SRC.find((needle) => src.includes(needle));
+    if (runtime) {
+      const local = localise(src, localWebflow);
+      if (local) {
+        setAttr(script, 'src', local);
+        removeAttr(script, 'integrity');
+        bump('runtimeLocalised');
+      }
+      continue;
+    }
+
+    if (BLOCKED_SRC.some((needle) => src.includes(needle))) {
       removeNode(root, script);
       bump('scriptsRemoved');
       continue;
     }
   }
 
-  if (remoteEngine) restoreRemoteEngine(root, report);
+  // The published stylesheet: same treatment -----------------------------
+  for (const link of findAll(root, (n) => isElement(n, 'link'))) {
+    const href = getAttr(link, 'href') || '';
+    if (!href.includes('lando-offbrand.shared')) continue;
+    const local = localise(href, localWebflow);
+    if (local) {
+      setAttr(link, 'href', local);
+      removeAttr(link, 'integrity');
+      bump('stylesheetLocalised');
+    }
+  }
+
+  // The commented-out ladder of alternative engine builds, and the isolated
+  // transition script parked inside a .js__embed, are dev leftovers: the
+  // engine this page runs is the one wired up above.
+  for (const div of findAll(root, (n) => isElement(n) && hasClass(n, 'js__embed'))) {
+    if ((div.children || []).some((c) => c.type === 'comment'
+      && (c.value || '').includes('transitions-rive-isolate.js'))) {
+      removeNode(root, div);
+      bump('embedsRemoved');
+    }
+  }
 
   // Comments ------------------------------------------------------------
   for (const comment of findAll(root, (n) => n.type === 'comment')) {
@@ -263,7 +325,16 @@ export function cleanDocument(root, report = {}, { remoteEngine = true } = {}) {
  * Asset injection
  * ------------------------------------------------------------------ */
 
-const HEAD_BOOT = `<script>document.documentElement.classList.add('ln-js');</script>`;
+/**
+ * `ln-js` is the switch that turns on every local-engine CSS rule (preloader
+ * art, reveal masks, split-text hiding). It has to be on before first paint,
+ * or a local-only build flashes un-animated content — but it must NOT be on
+ * when the real engine is in the page, because its preloader rules hide the
+ * Rive canvas the genuine intro animates into. So the tag depends on the
+ * build: engine.js adds the class itself when it decides to drive.
+ */
+const HEAD_BOOT_LOCAL = `<script>document.documentElement.classList.add('ln-js');</script>`;
+const HEAD_BOOT_REAL = `<script>document.documentElement.classList.add('ln-waiting');</script>`;
 
 const NOSCRIPT = `<noscript><style>
 .transition-w{display:none !important}
@@ -276,27 +347,48 @@ const FAILSAFE = `<script>
    must not stay behind the preloader. Pure safety net — no behaviour. */
 (function () {
   var html = document.documentElement;
-  var timer = setTimeout(function () { html.classList.add('ln-failsafe'); }, 12000);
+
+  /* The real OFF+BRAND engine leaves these on window as it comes up:
+     landoGL the moment the bundle evaluates, loadingComplete when its Rive
+     art is in, lenis when it is actually driving the page. When it is alive
+     the intro overlay on screen is the design — a Rive animation that ends in
+     a "Load Norris" button — not a trap, so the failsafe waits instead of
+     tearing it down. */
+  function realEngine() {
+    return !!(window.landoGL || window.lenis || window.loadingComplete);
+  }
+
+  var timer = setTimeout(check, 12000);
+  var waited = 0;
+  function check() {
+    if (html.classList.contains('ln-ready')) return;
+    if (realEngine() && waited < 45000) { waited += 3000; timer = setTimeout(check, 3000); return; }
+    html.classList.add('ln-failsafe');
+  }
+
   window.addEventListener('ln:ready', function () { clearTimeout(timer); });
   /* the engine is alive: all that is left is the preloader handing over */
   window.addEventListener('ln:booted', function () {
     clearTimeout(timer);
-    timer = setTimeout(function () {
-      if (!html.classList.contains('ln-ready')) html.classList.add('ln-failsafe');
-    }, 6000);
+    timer = setTimeout(check, 6000);
   });
   window.addEventListener('error', function () {
-    setTimeout(function () { if (!html.classList.contains('ln-ready')) html.classList.add('ln-failsafe'); }, 1200);
+    setTimeout(function () {
+      if (!html.classList.contains('ln-ready') && !realEngine()) html.classList.add('ln-failsafe');
+    }, 1200);
   });
 
   /* Anti-trap, independent of every stylesheet and every engine. If a
-     full-screen overlay is still covering the viewport after ~10s, hide it
-     with inline styles and reveal the page. Last line of defence for the
-     cases a class-based failsafe cannot reach: engine.css never arriving,
-     engine.js throwing, or a third-party engine stalling on art that never
-     loads while its overlay sits on top of everything. */
+     full-screen overlay is still covering the viewport after the grace
+     period, hide it with inline styles and reveal the page. Last line of
+     defence for the cases a class-based failsafe cannot reach: engine.css
+     never arriving, engine.js throwing, or an engine stalling on art that
+     never loads while its overlay sits on top of everything. The real engine
+     gets a longer grace period, because its overlay is meant to be there
+     until the visitor clicks through it. */
   var grace = 9;
   var guard = setInterval(function () {
+    if (realEngine() && grace < 45) grace = 45;
     var w = document.querySelector('.transition-w');
     if (!w || !covers(w)) { clearInterval(guard); return; }
     if (grace-- > 0) return;
@@ -326,20 +418,19 @@ const FAILSAFE = `<script>
 
 const ENGINE_TAG = `<script type="module" src="/assets/js/engine.js"></script>`;
 
-export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buildStamp, remoteEngine = true } = {}) {
+export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buildStamp, realEngine = false } = {}) {
   const head = find(root, (n) => isElement(n, 'head'));
   const body = find(root, (n) => isElement(n, 'body'));
   if (!head || !body) throw new Error('document is missing <head>/<body>');
 
-  // The OFF+BRAND hosts reject foreign referrers; sending none is the only
-  // lever a browser gives us, and it applies to the .riv fetches too.
-  if (remoteEngine) {
-    append(head, fragment('<meta name="referrer" content="no-referrer">'));
-  }
+  // Nothing in this build needs a referrer any more — the engine and its art
+  // are same-origin — but the page still pulls photography from the Webflow
+  // CDN, so keep the origin to ourselves.
+  append(head, fragment('<meta name="referrer" content="no-referrer">'));
 
   append(head, fragment(
     `<link rel="stylesheet" href="${stylesheet}">`
-    + HEAD_BOOT
+    + (realEngine ? HEAD_BOOT_REAL : HEAD_BOOT_LOCAL)
     + NOSCRIPT
     + (buildStamp ? `<!-- ${buildStamp} -->` : ''),
   ));
@@ -352,11 +443,14 @@ export function injectAssets(root, { stylesheet = '/assets/css/engine.css', buil
  * ------------------------------------------------------------------ */
 
 export function buildHome(sourceHtml, opts = {}) {
-  const remoteEngine = opts.remoteEngine !== false;
   const { root, repairs } = parse(sourceHtml);
   const report = { repairs: summarizeRepairs(repairs) };
-  cleanDocument(root, report, { remoteEngine });
-  injectAssets(root, opts);
+  const engineSrc = opts.engineSrc || null;
+  cleanDocument(root, report, {
+    engineSrc,
+    localWebflow: opts.localWebflow || null,
+  });
+  injectAssets(root, { ...opts, realEngine: Boolean(engineSrc) });
   return { root, html: serialize(root), report };
 }
 
@@ -421,9 +515,9 @@ function composeSubPage(root, def) {
 
   // Sub-pages always run the local engine: they have no `.transition-w` for
   // the OFF+BRAND transition to drive and no Rive art of their own, so the
-  // remote bundle would only add a dependency and a chance of a dead page.
+  // engine bundle would only add 1.3 MB and a chance of a dead page.
   for (const node of findAll(root, (n) => isElement(n, 'script')
-    && REMOTE_ENGINE_SRC.some((needle) => (getAttr(n, 'src') || '').includes(needle)))) {
+    && SUB_PAGE_DROP.some((needle) => (getAttr(n, 'src') || '').includes(needle)))) {
     removeNode(root, node);
   }
 
