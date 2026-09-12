@@ -1507,7 +1507,7 @@
 == manifest
 + echo '{'
 ++ date -u +%Y-%m-%dT%H:%M:%SZ
-+ echo '  "generatedAt": "2026-09-12T05:32:51Z",'
++ echo '  "generatedAt": "2026-09-12T05:45:16Z",'
 + echo '  "files": ['
 + first=1
 + IFS='	'
