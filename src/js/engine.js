@@ -60,7 +60,7 @@ const startedAt = performance.now();
  * takeover by the local engine cannot collide with a half-built real one.
  * ------------------------------------------------------------------ */
 const EVALUATED_BY_MS = 4000;    // no landoGL by now ⇒ the bundle threw on load
-const BOOTED_BY_MS = 45000;      // the WebGL hero is ~5 MB on a cold cache
+const BOOTED_BY_MS = 25000;      // the WebGL hero is ~5 MB on a cold cache
 const POLL_MS = 150;
 const NUDGE_AFTER_MS = 2500;     // when to start unblocking their Rive handshake
 const NUDGE_EVERY_MS = 1500;

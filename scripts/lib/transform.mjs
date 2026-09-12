@@ -362,7 +362,7 @@ const FAILSAFE = `<script>
   var waited = 0;
   function check() {
     if (html.classList.contains('ln-ready')) return;
-    if (realEngine() && waited < 45000) { waited += 3000; timer = setTimeout(check, 3000); return; }
+    if (realEngine() && waited < 30000) { waited += 3000; timer = setTimeout(check, 3000); return; }
     html.classList.add('ln-failsafe');
   }
 
@@ -388,7 +388,7 @@ const FAILSAFE = `<script>
      until the visitor clicks through it. */
   var grace = 9;
   var guard = setInterval(function () {
-    if (realEngine() && grace < 45) grace = 45;
+    if (realEngine() && grace < 30) grace = 30;
     var w = document.querySelector('.transition-w');
     if (!w || !covers(w)) { clearInterval(guard); return; }
     if (grace-- > 0) return;
